@@ -1,0 +1,134 @@
+---
+title: Home
+views:
+  - title: Home
+    id: home
+    icon: mdi:home
+    cards:
+      - type: entities
+        title: Hive
+        entities:
+          - climate.heating
+          - climate.hot_water
+          - sensor.heating_boost
+          - sensor.hot_water_boost
+          - sensor.thermostat_battery_level
+
+      - type: entity-filter
+        title: Device Trackers
+        entities:
+          - device_tracker.homeassistant_pixel2
+          - device_tracker.scarlettsiphone
+          - device_tracker.vikkis_pixel2
+        state_filter:
+          - 'home'
+        card:
+          type: glance
+          title: People at Home
+  
+  - title: TV
+    id: tv
+    icon: mdi:television
+    cards:
+      - type: media-control
+        entity: media_player.bedroom_tv
+
+      - type: media-control
+        entity: media_player.living_room_tv
+
+      - type: media-control
+        entity: media_player.scarletts_bedroom_tv
+
+  - title: Audio
+    id: audio
+    icon: mdi:music
+    cards:
+      - type: media-control
+        entity: media_player.bedroom_speaker
+
+      - type: media-control
+        entity: media_player.downstairs_audio
+
+      - type: media-control
+        entity: media_player.hifi
+
+      - type: media-control
+        entity: media_player.house_audio
+
+      - type: media-control
+        entity: media_player.kitchen_speaker
+  
+  - title: Lights
+    id: lights
+    icon: mdi:lightbulb
+    cards:
+      - type: entities
+        title: Living Room
+        show_header_toggle: false
+        entities:
+          - light.living_room_lights
+          - light.hue_rgb_lamp_1
+          - light.hue_rgb_lamp_2
+          - light.tradfri_rgb_light_1
+
+      - type: entities
+        title: Bedroom
+        show_header_toggle: false
+        entities:
+          - light.yeelight_rgb_7811dca200fb
+
+      - type: entities
+        title: Other
+        show_header_toggle: false
+        entities:
+          - light.house_lights
+          - light.hue_white_lamp_1
+          - light.hue_white_lamp_2
+  
+  - title: Upstairs
+    id: upstairs
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: entities
+            title: Bedroom
+            show_header_toggle: false
+            entities:
+              - light.yeelight_rgb_7811dca200fb
+          - type: media-control
+            entity: media_player.bedroom_speaker
+          - type: media-control
+            entity: media_player.bedroom_tv
+     
+      - type: glance
+        title: Study
+        show_name: false
+        show_state: false
+        entities:
+          - entity: switch.beastlypie
+            name: Computer
+            icon: mdi:desktop-classic
+            tap_action: 
+              action: toggle
+            hold_action: 
+              action: more-info
+  
+  - title: Downstairs   
+    id: downstairs     
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: entities
+            title: Living Room
+            show_header_toggle: false
+            entities:
+              - light.living_room_lights
+              - light.hue_rgb_lamp_1
+              - light.hue_rgb_lamp_2
+              - light.tradfri_rgb_light_1
+          - type: media-control
+            entity: media_player.hifi
+          - type: media-control
+            entity: media_player.kitchen_speaker
+      - type: media-control
+        entity: media_player.downstairs_audio

@@ -1,0 +1,140 @@
+---
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 75
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/London
+  # Customization file
+  customize: !include customize.yaml
+
+# Enables the frontend
+frontend:
+lovelace:
+  mode: yaml
+
+# Enables configuration UI
+config:
+
+# Enables cloud support
+cloud:
+  google_actions:
+    filter:
+      include_domains:
+        - light
+        - scene
+      exclude_entities:
+        - light.house_lights
+        - light.living_room_lights
+        - light.living_room
+        - light.hallway
+        - light.landing
+
+http:
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  base_url: !secret base_url
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Enables support for tracking state changes over time
+history:
+
+recorder:
+  db_url: !secret recorder_connection_string
+  purge_interval: 1
+  purge_keep_days: 14
+  include:
+    domains:
+      - sensor
+      - light
+    entities:
+      - device_tracker.homeassistant_pixel2
+      - device_tracker.scarlettsiphone
+      - device_tracker.vikkis_pixel2
+  exclude:
+    entities:
+      - sensor.weather_symbol
+
+# View all events in a logbook
+logbook:
+
+# Track the sun
+sun:
+
+mqtt:
+  broker: mosquitto
+  username: homeassistant
+  password: !secret mqtt_password
+  birth_message:
+    topic: '/home/services/homeassistant'
+    payload: 'online'
+  will_message:
+    topic: '/home/services/homeassistant'
+    payload: 'offline'
+
+sensor:
+  - platform: yr
+    name: Weather
+  - platform: cert_expiry
+    host: !secret cert_expiry_domain
+
+# Text to speech
+tts:
+  - platform: google
+
+hive:
+  username: !secret hive_username
+  password: !secret hive_password
+
+map:
+
+zone:
+  - name: Adam's Work
+    latitude: !secret zone_adam_work_latitude
+    longitude: !secret zone_adam_work_longitude
+    icon: mdi:domain
+
+device_tracker:
+  - platform: nmap_tracker
+    hosts:
+      - 192.168.11.100/30
+      - 192.168.11.104/29
+      - 192.168.11.112/28
+      - 192.168.11.128/26
+      - 192.168.11.192/29
+      - 192.168.11.200/32
+    interval_seconds: 10
+    consider_home: 180
+    track_new_devices: no
+
+switch:
+  - platform: wake_on_lan
+    name: BeastlyPie
+    mac_address: !secret desktop_wol_mac
+    host: beastlypie
+
+duckdns:
+  domain: !secret duckdns_domain
+  access_token: !secret duckdns_access_token
+
+light: !include lights.yaml
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml

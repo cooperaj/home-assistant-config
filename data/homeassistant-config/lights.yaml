@@ -1,0 +1,17 @@
+---
+- platform: group
+  name: "Living Room Lights"
+  entities:
+    - light.hue_rgb_lamp_1
+    - light.hue_rgb_lamp_2
+    - light.tradfri_rgb_light_1 
+
+- platform: group
+  name: "House Lights"
+  entities:
+    - light.yeelight_rgb_7811dca200fb
+    - light.hue_rgb_lamp_1
+    - light.hue_rgb_lamp_2
+    - light.tradfri_rgb_light_1 
+    - light.hue_white_lamp_1
+    - light.hue_white_lamp_2

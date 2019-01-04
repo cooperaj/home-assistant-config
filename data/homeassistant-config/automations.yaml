@@ -1,0 +1,16 @@
+---
+- id: lr_evening_lighting_automation
+  alias: Turn on living room lights on as the sun gets dimmer
+  trigger:
+  - below: 3.5
+    entity_id: sun.sun
+    platform: numeric_state
+    value_template: '{{ state.attributes.elevation }}'
+  condition:
+  - condition: state
+    entity_id: light.living_room_lights
+    state: 'off'
+  action:
+  - data:
+      entity_id: scene.evening_lighting
+    service: scene.turn_on

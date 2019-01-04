@@ -1,0 +1,39 @@
+---
+internet_sensors:
+  name: Internet
+  entities:
+    - sensor.speedtest_download
+    - sensor.speedtest_upload
+    - sensor.speedtest_ping
+
+chromecasts_tv:
+  name: TV
+  icon: mdi:television
+  entities:
+    - media_player.living_room_tv
+    - media_player.bedroom_tv
+    - media_player.scarletts_bedroom_tv
+
+chromecasts_audio:
+  name: Audio
+  icon: mdi:music-note
+  entities:
+    - media_player.bedroom_speaker
+    - media_player.hifi
+    - media_player.kitchen_speaker
+
+chromecasts_audio_group:
+  name: "Audio Group"
+  icon: mdi:music
+  entities:
+    - media_player.house_audio
+    - media_player.downstairs_audio
+
+hive:
+  name: Hive
+  entities:
+    - climate.heating
+    - climate.hot_water
+    - sensor.heating_boost
+    - sensor.hot_water_boost
+    - sensor.thermostat_battery_level

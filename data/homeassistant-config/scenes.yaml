@@ -1,0 +1,15 @@
+---
+- name: Evening Lighting
+  entities:
+      light.hue_rgb_lamp_1:
+          state: on
+          kelvin: 3700
+          brightness_pct: 85
+      light.hue_rgb_lamp_2:
+          state: on
+          kelvin: 3700
+          brightness_pct: 85
+      light.tradfri_rgb_light_1:
+          state: on
+          kelvin: 3700
+          brightness_pct: 85

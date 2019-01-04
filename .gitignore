@@ -1,0 +1,14 @@
+.cloud/*
+.storage/*
+.HA_VERSION
+.uuid
+
+deps/*
+tts/*
+
+secrets.yaml
+known_devices.yaml
+
+home-assistant.log
+html5_push_registrations.conf
+plex.conf

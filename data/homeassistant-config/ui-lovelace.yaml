@@ -108,18 +108,17 @@ views:
       - type: media-control
         entity: media_player.scarletts_bedroom_tv
 
-      - type: glance
-        title: Study
-        show_name: false
-        show_state: false
-        entities:
-          - entity: switch.beastlypie
-            name: Computer
-            icon: mdi:desktop-classic
-            tap_action: 
-              action: toggle
-            hold_action: 
-              action: more-info
+      - type: entity-button
+        entity: switch.beastlypie
+          name: Computer
+          icon: mdi:desktop-classic
+          tap_action: 
+            action: toggle
+          hold_action: 
+            action: more-info
+
+      - type: entity-button
+        entity: media_player.chromecast9378
   
   - title: Downstairs   
     id: downstairs     

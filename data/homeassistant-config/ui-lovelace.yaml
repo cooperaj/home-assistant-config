@@ -110,12 +110,12 @@ views:
 
       - type: entity-button
         entity: switch.beastlypie
-          name: Computer
-          icon: mdi:desktop-classic
-          tap_action: 
-            action: toggle
-          hold_action: 
-            action: more-info
+        name: Computer
+        icon: mdi:desktop-classic
+        tap_action: 
+          action: toggle
+        hold_action: 
+          action: more-info
 
       - type: entity-button
         entity: media_player.chromecast9378

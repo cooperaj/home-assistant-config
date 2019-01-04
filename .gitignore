@@ -1,5 +1,10 @@
-.cloud/*
-.storage/*
+data/mosquitto-config
+data/mosquitto-data
+data/nodered-data
+
+# home-assistant things
+.cloud
+.storage
 .HA_VERSION
 .uuid
 

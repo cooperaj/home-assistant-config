@@ -95,13 +95,9 @@ views:
         cards:
           - type: horizontal-stack
             cards:
-              - type: entity-button
+              - type: light
                 entity: light.yeelight_rgb_7811dca200fb
-                name: Bedroom Light
-                tap_action: 
-                  action: toggle
-                hold_action: 
-                  action: more-info 
+                name: Bedroom
 
               - type: entity-button
                 entity: switch.beastlypie

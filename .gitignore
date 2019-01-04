@@ -8,8 +8,9 @@ data/nodered-data
 .HA_VERSION
 .uuid
 
-deps/*
-tts/*
+deps
+tts
+__pycache__
 
 secrets.yaml
 known_devices.yaml

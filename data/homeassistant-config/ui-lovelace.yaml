@@ -31,10 +31,10 @@ views:
     icon: mdi:television
     cards:
       - type: media-control
-        entity: media_player.bedroom_tv
+        entity: media_player.chromecast9378
 
       - type: media-control
-        entity: media_player.chromecast9378
+        entity: media_player.bedroom_tv
 
       - type: media-control
         entity: media_player.scarletts_bedroom_tv
@@ -43,20 +43,22 @@ views:
     id: audio
     icon: mdi:music
     cards:
-      - type: media-control
-        entity: media_player.bedroom_speaker
+      - type: vertical-stack
+        cards:
+          - type: media-control
+            entity: media_player.hifi
+
+          - type: media-control
+            entity: media_player.kitchen_speaker
+
+          - type: media-control
+            entity: media_player.bedroom_speaker
 
       - type: media-control
         entity: media_player.downstairs_audio
 
       - type: media-control
-        entity: media_player.hifi
-
-      - type: media-control
         entity: media_player.house_audio
-
-      - type: media-control
-        entity: media_player.kitchen_speaker
   
   - title: Lights
     id: lights
@@ -95,8 +97,10 @@ views:
             show_header_toggle: false
             entities:
               - light.yeelight_rgb_7811dca200fb
+
           - type: media-control
             entity: media_player.bedroom_speaker
+
           - type: media-control
             entity: media_player.bedroom_tv
           
@@ -129,12 +133,15 @@ views:
               - light.hue_rgb_lamp_1
               - light.hue_rgb_lamp_2
               - light.tradfri_rgb_light_1
+
           - type: media-control
             entity: media_player.chromecast9378
+
           - type: media-control
             entity: media_player.hifi
         
       - type: media-control
         entity: media_player.kitchen_speaker
+
       - type: media-control
         entity: media_player.downstairs_audio

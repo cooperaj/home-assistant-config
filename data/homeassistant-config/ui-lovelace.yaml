@@ -93,11 +93,24 @@ views:
     cards:
       - type: vertical-stack
         cards:
-          - type: entities
-            title: Bedroom
-            show_header_toggle: false
-            entities:
-              - light.yeelight_rgb_7811dca200fb
+          - type: horizontal-stack
+            cards:
+              - type: entity-button
+                entity: light.yeelight_rgb_7811dca200fb
+                name: Bedroom Light
+                tap_action: 
+                  action: toggle
+                hold_action: 
+                  action: more-info 
+
+              - type: entity-button
+                entity: switch.beastlypie
+                name: Study Computer
+                icon: mdi:desktop-classic
+                tap_action: 
+                  action: toggle
+                hold_action: 
+                  action: more-info              
 
           - type: media-control
             entity: media_player.bedroom_speaker
@@ -107,20 +120,6 @@ views:
           
       - type: media-control
         entity: media_player.scarletts_bedroom_tv
-
-      - type: horizontal-stack
-        cards:
-          - type: entity-button
-            entity: switch.beastlypie
-            name: Computer
-            icon: mdi:desktop-classic
-            tap_action: 
-              action: toggle
-            hold_action: 
-              action: more-info
-
-          - type: entity-button
-            entity: media_player.chromecast9378
   
   - title: Downstairs   
     id: downstairs     

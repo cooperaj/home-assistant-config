@@ -18,3 +18,4 @@ known_devices.yaml
 home-assistant.log
 html5_push_registrations.conf
 plex.conf
+core

@@ -1,0 +1,7 @@
+---
+
+- name: Adam
+  id: adam
+  user_id: 1a1439d4195d4376b048edcbaded8ef5
+  device_trackers:
+    - device_tracker.homeassistant_pixel2

@@ -22,6 +22,8 @@ lovelace:
 # Enables configuration UI
 config:
 
+system_health:
+
 # Enables cloud support
 cloud:
   google_actions:
@@ -138,3 +140,4 @@ group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+person: !include people.yaml

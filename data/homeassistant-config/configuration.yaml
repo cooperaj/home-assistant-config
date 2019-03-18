@@ -129,7 +129,7 @@ switch:
   - platform: wake_on_lan
     name: BeastlyPie
     mac_address: !secret desktop_wol_mac
-    host: beastlypie
+    host: !secret desktop_wol_ip
 
 duckdns:
   domain: !secret duckdns_domain

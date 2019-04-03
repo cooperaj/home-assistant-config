@@ -13,3 +13,5 @@ light.hue_white_lamp_1:
   friendly_name: Hallway
 light.hue_white_lamp_2:
   friendly_name: Landing
+light.yeelight_rgb_34ce008d08b8:
+  friendly_name: Light

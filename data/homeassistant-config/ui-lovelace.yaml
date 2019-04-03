@@ -81,6 +81,12 @@ views:
           - light.yeelight_rgb_7811dca200fb
 
       - type: entities
+        title: Study
+        show_header_toggle: false
+        entities:
+          - light.yeelight_rgb_34ce008d08b8
+
+      - type: entities
         title: Other
         show_header_toggle: false
         entities:
@@ -91,29 +97,32 @@ views:
   - title: Upstairs
     id: upstairs
     cards:
-      - type: vertical-stack
+      
+      - type: horizontal-stack
         cards:
-          - type: horizontal-stack
-            cards:
-              - type: light
-                entity: light.yeelight_rgb_7811dca200fb
-                name: Bedroom
+          - type: light
+            entity: light.yeelight_rgb_7811dca200fb
+            name: Bedroom
 
-              - type: entity-button
-                entity: switch.beastlypie
-                name: Study Computer
-                icon: mdi:desktop-classic
-                tap_action: 
-                  action: toggle
-                hold_action: 
-                  action: more-info              
+          - type: light
+            entity: light.yeelight_rgb_34ce008d08b8
+            name: Study            
 
-          - type: media-control
-            entity: media_player.bedroom_speaker
+      - type: media-control
+        entity: media_player.bedroom_speaker
 
-          - type: media-control
-            entity: media_player.bedroom_tv
-          
+      - type: media-control
+        entity: media_player.bedroom_tv
+
+      - type: entity-button
+        entity: switch.beastlypie
+        name: Study Computer
+        icon: mdi:desktop-classic
+        tap_action: 
+          action: toggle
+        hold_action: 
+          action: more-info  
+
       - type: media-control
         entity: media_player.scarletts_bedroom_tv
   

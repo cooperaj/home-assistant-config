@@ -10,6 +10,7 @@
   name: "House Lights"
   entities:
     - light.yeelight_rgb_7811dca200fb
+    - light.yeelight_rgb_34ce008d08b8
     - light.hue_rgb_lamp_1
     - light.hue_rgb_lamp_2
     - light.tradfri_rgb_light_1 

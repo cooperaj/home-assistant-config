@@ -133,9 +133,7 @@ views:
         cards:
           - type: entities
             title: Living Room
-            show_header_toggle: false
             entities:
-              - light.living_room_lights
               - light.hue_rgb_lamp_1
               - light.hue_rgb_lamp_2
               - light.tradfri_rgb_light_1

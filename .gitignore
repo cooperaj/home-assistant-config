@@ -19,3 +19,5 @@ home-assistant.log
 html5_push_registrations.conf
 plex.conf
 core
+
+.vscode

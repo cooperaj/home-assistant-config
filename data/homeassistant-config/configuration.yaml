@@ -100,10 +100,11 @@ sensor:
     name: Weather
   - platform: cert_expiry
     host: !secret cert_expiry_domain
+  - platform: google_wifi
 
 # Text to speech
 tts:
-  - platform: google
+  - platform: google_translate
 
 hive:
   username: !secret hive_username

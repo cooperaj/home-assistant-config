@@ -84,11 +84,16 @@ mqtt:
   username: homeassistant
   password: !secret mqtt_password
   birth_message:
-    topic: '/home/services/homeassistant'
+    topic: 'services/homeassistant/state'
     payload: 'online'
   will_message:
-    topic: '/home/services/homeassistant'
+    topic: 'services/homeassistant/state'
     payload: 'offline'
+
+mqtt_statestream:
+  base_topic: homeassistant
+  publish_attributes: true
+  publish_timestamps: true
 
 sensor:
   - platform: yr

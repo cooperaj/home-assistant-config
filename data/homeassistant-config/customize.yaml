@@ -7,11 +7,11 @@ light.hue_rgb_lamp_2:
   friendly_name: Rear Light
 light.tradfri_rgb_light_1:
   friendly_name: Lamp
-light.yeelight_rgb_7811dca200fb:
+light.yeelight_color1_7811dca200fb:
   friendly_name: Light
 light.hue_white_lamp_1:
   friendly_name: Hallway
 light.hue_white_lamp_2:
   friendly_name: Landing
-light.yeelight_rgb_34ce008d08b8:
+light.yeelight_color1_34ce008d08b8:
   friendly_name: Light

@@ -76,13 +76,13 @@ views:
         title: Bedroom
         show_header_toggle: false
         entities:
-          - light.yeelight_rgb_7811dca200fb
+          - light.yeelight_color1_7811dca200fb
 
       - type: entities
         title: Study
         show_header_toggle: false
         entities:
-          - light.yeelight_rgb_34ce008d08b8
+          - light.yeelight_color1_34ce008d08b8
 
       - type: entities
         title: Other
@@ -99,11 +99,11 @@ views:
       - type: horizontal-stack
         cards:
           - type: light
-            entity: light.yeelight_rgb_7811dca200fb
+            entity: light.yeelight_color1_7811dca200fb
             name: Bedroom
 
           - type: light
-            entity: light.yeelight_rgb_34ce008d08b8
+            entity: light.yeelight_color1_34ce008d08b8
             name: Study            
 
       - type: media-control

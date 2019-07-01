@@ -14,6 +14,9 @@ services:
         extra_hosts:
             - "mysql:192.168.11.10"
             - "mosquitto:192.168.11.10"
+	logging:
+            options:
+                max-size: 10m
 
     mosquitto:
         container_name: mosquitto
@@ -24,6 +27,9 @@ services:
         restart: always
         ports:
             - 1883:1883
+	logging:
+            options:
+                max-size: 10m
 
     nodered:
         container_name: nodered
@@ -35,6 +41,9 @@ services:
             - mosquitto
         ports:
             - 1880:1880
+	logging:
+            options:
+                max-size: 10m
 
 volumes:
     homeassistant-config:

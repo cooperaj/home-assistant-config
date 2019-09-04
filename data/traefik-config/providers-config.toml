@@ -1,0 +1,20 @@
+[http]
+  [http.middlewares]
+    [http.middlewares.redirecthttps.redirectScheme]
+      scheme="https"
+      permanent=true
+
+  [http.routers]
+    [http.routers.ha]
+      entryPoints=["websecure"]
+      service="service-ha"
+      rule="Host(`{{ env "HA_DOMAIN_NAME" }}`)"
+      middlewares=["redirecthttps"]
+      [http.routers.ha.tls]
+        certResolver="myhttpchallenge"
+
+  [http.services]
+    [http.services.service-ha]
+      [http.services.service-ha.loadBalancer]
+          [[http.services.service-ha.loadBalancer.servers]]
+            url = "{{ env "HA_ADDRESS" }}"

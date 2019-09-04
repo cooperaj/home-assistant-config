@@ -1,6 +1,38 @@
 version: '3'
 
 services:
+    reverse-proxy:
+        container_name: reverse-proxy
+        # The official v2.0 Traefik docker image
+        image: traefik:v2.0
+        command:
+            - "--global.sendanonymoususage=false"
+            - "--api=true"
+            - "--entrypoints.web.address=:80"
+            - "--entrypoints.websecure.address=:443"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--providers.file=true"
+            - "--providers.file.filename=/etc/traefik/providers-config.toml"
+            - "--certificatesresolvers.myhttpchallenge=true"
+            - "--certificatesresolvers.myhttpchallenge.acme.email=${ACME_EMAIL}"
+            - "--certificatesresolvers.myhttpchallenge.acme.storage=/etc/traefik/ssl/acme.json"
+            - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge=true"
+            - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge.entrypoint=web"
+        environment:
+            ACME_EMAIL: 
+            HA_ADDRESS:
+            HA_DOMAIN_NAME:
+        ports:
+            - 80:80
+            - 443:443
+            # The Web UI (enabled by --api)
+            - 8080:8080
+        volumes:
+            # So that Traefik can listen to the Docker events
+            - /var/run/docker.sock:/var/run/docker.sock
+            - traefik-config:/etc/traefik
+
     homeassistant:
         container_name: home-assistant
         image: homeassistant/raspberrypi2-homeassistant:0.95.1
@@ -9,6 +41,8 @@ services:
             - /etc/localtime:/etc/localtime:ro
         restart: always
         network_mode: host
+        ports:
+            - 8123:8123
         depends_on:
             - mosquitto
         extra_hosts:
@@ -44,8 +78,15 @@ services:
         logging:
             options:
                 max-size: 10m
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.nodered.rule=Host(***REMOVED***) && PathPrefix(`/red`)"
+            - "traefik.http.routers.nodered.entrypoints=websecure"
+            - "traefik.http.routers.nodered.tls=true"
 
 volumes:
+    traefik-config:
+        external: true
     homeassistant-config:
         external: true
     mosquitto-data:

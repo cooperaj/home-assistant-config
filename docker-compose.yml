@@ -20,7 +20,6 @@ services:
             - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge=true"
             - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge.entrypoint=web"
         environment:
-            ACME_EMAIL: 
             HA_ADDRESS:
             HA_DOMAIN_NAME:
         ports:
@@ -81,7 +80,7 @@ services:
                 max-size: 10m
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.nodered.rule=Host(***REMOVED***) && PathPrefix(`/red`)"
+            - "traefik.http.routers.nodered.rule=Host(`${HA_DOMAIN_NAME}`) && PathPrefix(`/red`)"
             - "traefik.http.routers.nodered.entrypoints=websecure"
             - "traefik.http.routers.nodered.tls=true"
 

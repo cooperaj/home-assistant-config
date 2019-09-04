@@ -1,6 +1,8 @@
 ---
+
 sensor.weather_symbol:
   friendly_name: Weather
+
 light.hue_rgb_lamp_1:
   friendly_name: Front Light
 light.hue_rgb_lamp_2:
@@ -15,3 +17,8 @@ light.hue_white_lamp_2:
   friendly_name: Landing
 light.yeelight_color1_34ce008d08b8:
   friendly_name: Light
+
+person.adam:
+  entity_picture: '/local/adam.jpg'
+person.vikki:
+  entity_picture: '/local/vikki.jpg'

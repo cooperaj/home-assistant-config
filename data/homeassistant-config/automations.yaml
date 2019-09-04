@@ -1,8 +1,7 @@
----
 - id: lr_evening_lighting_automation
   alias: Turn on living room lights on as the sun gets dimmer
   trigger:
-  - below: 3.5
+  - below: '4'
     entity_id: sun.sun
     platform: numeric_state
     value_template: '{{ state.attributes.elevation }}'
@@ -12,5 +11,22 @@
     state: 'off'
   action:
   - data:
-      entity_id: scene.evening_lighting
-    service: scene.turn_on
+      entity_id: light.living_room_lights
+    service: light.turn_on
+    
+- id: h_nighttime_lights_off_automation
+  alias: Turn off lights
+  trigger:
+  - at: '23:00'
+    platform: time
+  condition:
+  - condition: state
+    entity_id: device_tracker.homeassistant_pixel2
+    state: 'not_home'
+  - condition: state
+    entity_id: device_tracker.vikkis_pixel2
+    state: 'not_home'
+  action:
+  - data:
+      entity_id: light.house_lights
+    service: light.turn_off

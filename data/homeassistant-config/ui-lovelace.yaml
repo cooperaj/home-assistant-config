@@ -1,76 +1,247 @@
 ---
 title: Home
+
+resources:
+  - url: /local/custom-compact-header.js?v=1.3.5
+    type: module
+  - url: /local/button-card.js?v=1
+    type: module
+  - url: /local/mini-media-player-bundle.js?v=1.2.2
+    type: module
+  - url: /local/simple-weather-card-bundle.js?v=0.5.0
+    type: module
+  - url: /local/mini-graph-card-bundle.js?v=0.5.0
+    type: module
+  - url: /local/simple-thermostat.js?v=0.26.0-0
+    type: module
+  - url: /community_plugin/vertical-stack-in-card/vertical-stack-in-card.js?v=0.1.3
+    type: js
+  - url: /community_plugin/lovelace-card-mod/card-mod.js?v=3
+    type: module
+
 views:
   - title: Home
+    path: home
     id: home
     icon: mdi:home
     cards:
-      - type: entities
-        title: Hive
-        show_header_toggle: false
-        entities:
-          - climate.heating
-          - climate.hot_water
-          - sensor.heating_boost
-          - sensor.hot_water_boost
-          - sensor.thermostat_battery_level
+      - type: custom:simple-weather-card
+        entity:  weather.dark_sky
+        name: in Gedling
 
-      - type: entity-filter
-        title: Device Trackers
+      - type: custom:mini-graph-card
+        name: Temperature
         entities:
-          - device_tracker.homeassistant_pixel2
-          - device_tracker.scarlettsiphone
-          - device_tracker.vikkis_pixel2
-        state_filter:
-          - 'home'
-        card:
-          type: glance
-          title: People at Home
+          - entity: sensor.hive_current_temperature
+            name: Indoor
+          - entity: sensor.darksky_outside_temperature
+            name: Outdoor
+        show:
+          labels: true
+          legend: false
+
+      - type: custom:simple-thermostat
+        name: Central Heating
+        entity: climate.heating
+        hide:
+          state: true
+          temperature: true
+        modes: 
+          auto:
+            name: Schedule
+          heat:
+            name: Manual
+        sensors:
+          - entity: sensor.hive_current_temperature
+            name: Currently
+          - entity: sensor.hive_heating_boost
+            name: Boost
+          - entity: sensor.hive_thermostat_battery
+            name: Thermostat Battery
+      
+      - type: horizontal-stack
+        cards:
+          - type: picture-entity
+            entity: person.adam
+            state_image:
+              "home": /local/adam.jpg
+              "not_home": /local/adam-away.jpg
+          - type: picture-entity
+            entity: person.vikki
+            state_image:
+              "home": /local/vikki.jpg
+              "not_home": /local/vikki-away.jpg
+
   
   - title: TV
+    path: tv
     id: tv
     icon: mdi:television
     cards:
-      - type: media-control
+      - type: custom:mini-media-player
         entity: media_player.chromecast9378
+        artwork: cover
+        icon: mdi:television
+        source: icon
+        hide:
+          power_state: false
 
-      - type: media-control
+      - type: custom:mini-media-player
         entity: media_player.bedroom_tv
+        artwork: cover
+        icon: mdi:television
+        source: icon
+        hide:
+          power_state: false
 
-      - type: media-control
-        entity: media_player.scarletts_bedroom_tv
 
   - title: Audio
+    path: audio
     id: audio
     icon: mdi:music
     cards:
       - type: vertical-stack
         cards:
-          - type: media-control
+          - type: custom:mini-media-player
             entity: media_player.hifi
+            artwork: cover
+            icon: mdi:audio-video
+            source: icon
+            hide:
+              power_state: false
 
-          - type: media-control
+          - type: custom:mini-media-player
             entity: media_player.kitchen_speaker
+            artwork: cover
+            icon: mdi:google-home
+            source: icon
+            hide:
+              power_state: false
 
-          - type: media-control
+          - type: custom:mini-media-player
             entity: media_player.bedroom_speaker
+            artwork: cover
+            icon: mdi:speaker
+            source: icon
+            hide:
+              power_state: false
 
-      - type: media-control
-        entity: media_player.downstairs_audio
+      - type: entities
+        entities:
+          - type: custom:mini-media-player
+            entity: media_player.downstairs_audio
+            icon: mdi:speaker
+            info: short
+            group: true
+            hide:
+              volume: true
+              power: true
+              progress: true
 
-      - type: media-control
-        entity: media_player.house_audio
+          - type: custom:mini-media-player
+            entity: media_player.hifi
+            icon: mdi:audio-video
+            group: true
+            artwork: none
+            hide:
+              controls: true
+              info: true
+              progress: true
+
+          - type: custom:mini-media-player
+            entity: media_player.kitchen_speaker
+            icon: mdi:google-home
+            group: true
+            artwork: none
+            hide:
+              controls: true
+              info: true
+              progress: true
+
+      - type: entities
+        entities:
+          - type: custom:mini-media-player
+            entity: media_player.house_audio
+            icon: mdi:speaker
+            info: short
+            group: true
+            hide:
+              volume: true
+              power: true
+              progress: true
+
+          - type: custom:mini-media-player
+            entity: media_player.hifi
+            icon: mdi:audio-video
+            group: true
+            artwork: none
+            hide:
+              controls: true
+              info: true
+              progress: true
+
+          - type: custom:mini-media-player
+            entity: media_player.kitchen_speaker
+            icon: mdi:google-home
+            group: true
+            artwork: none
+            hide:
+              controls: true
+              info: true
+              progress: true
+
+          - type: custom:mini-media-player
+            entity: media_player.bedroom_speaker
+            icon: mdi:speaker
+            group: true
+            artwork: none
+            hide:
+              controls: true
+              info: true
+              progress: true
   
+
   - title: Lights
+    path: lights
     id: lights
     icon: mdi:lightbulb
     cards:
-      - type: entities
-        title: Living Room
-        entities:
-          - light.hue_rgb_lamp_1
-          - light.hue_rgb_lamp_2
-          - light.tradfri_rgb_light_1
+      - type: custom:vertical-stack-in-card
+        cards:
+          - type: custom:button-card
+            entity: light.living_room_lights
+            name: Living Room
+            show_icon: false
+            tap_action: 
+              action: toggle
+            hold_action: 
+              action: more-info
+            styles:
+              card:
+                - -webkit-box-shadow: unset
+                - box-shadow: unset
+                - padding: 24px 16px 16px
+              name:
+                - color: var(--button-card-light-color)
+                - font-family: var(--ha-card-header-font-family)
+                - font-size: var(--ha-card-header-font-size, 24px)
+                - letter-spacing: -0.012em
+                - line-height: 32px
+                - justify-self: start
+              grid:
+                - grid-template-areas: '"n"'
+                - grid-template-rows: 1fr
+                - grid-template-columns: min-content 1fr
+          - type: entities
+            style: |
+              .card-content {
+                padding-top: 0;
+                margin-top: -8px;
+              }
+            entities:
+              - light.hue_rgb_lamp_1
+              - light.hue_rgb_lamp_2
+              - light.tradfri_rgb_light_1
 
       - type: entities
         title: Bedroom
@@ -92,58 +263,189 @@ views:
           - light.hue_white_lamp_1
           - light.hue_white_lamp_2
   
+
   - title: Upstairs
+    path: upstairs
     id: upstairs
     cards:
-      
       - type: horizontal-stack
         cards:
-          - type: light
+          - type: "custom:button-card"
             entity: light.yeelight_color1_7811dca200fb
-            name: Bedroom
+            icon: mdi:lightbulb
+            color: auto
+            name: Bedroom 
+            hold_action:
+              action: more-info
 
-          - type: light
+          - type: "custom:button-card"
             entity: light.yeelight_color1_34ce008d08b8
-            name: Study            
+            icon: mdi:lightbulb
+            color: auto
+            name: Study
+            hold_action:
+              action: more-info
 
-      - type: media-control
+          - type: "custom:button-card"
+            entity: switch.beastlypie
+            name: Study Computer
+            icon: mdi:desktop-classic
+            hold_action: 
+              action: more-info  
+
+      - type: custom:mini-media-player
         entity: media_player.bedroom_speaker
+        artwork: cover
+        icon: mdi:speaker
+        source: icon
+        hide:
+          power_state: false
 
-      - type: media-control
+      - type: custom:mini-media-player
         entity: media_player.bedroom_tv
-
-      - type: entity-button
-        entity: switch.beastlypie
-        name: Study Computer
-        icon: mdi:desktop-classic
-        tap_action: 
-          action: toggle
-        hold_action: 
-          action: more-info  
-
-      - type: media-control
-        entity: media_player.scarletts_bedroom_tv
+        artwork: cover
+        icon: mdi:television
+        source: icon
+        hide:
+          power_state: false
   
-  - title: Downstairs   
+
+  - title: Downstairs 
+    path: downstairs  
     id: downstairs     
     cards:
-      - type: vertical-stack
+      - type: custom:vertical-stack-in-card
         cards:
+          - type: custom:button-card
+            entity: light.living_room_lights
+            name: Living Room
+            show_icon: false
+            tap_action: 
+              action: toggle
+            hold_action: 
+              action: more-info
+            styles:
+              card:
+                - -webkit-box-shadow: unset
+                - box-shadow: unset
+                - padding: 24px 16px 16px
+              name:
+                - color: var(--button-card-light-color)
+                - font-family: var(--ha-card-header-font-family)
+                - font-size: var(--ha-card-header-font-size, 24px)
+                - letter-spacing: -0.012em
+                - line-height: 32px
+                - justify-self: start
+              grid:
+                - grid-template-areas: '"n"'
+                - grid-template-rows: 1fr
+                - grid-template-columns: min-content 1fr
           - type: entities
-            title: Living Room
+            style: |
+              .card-content {
+                padding-top: 0;
+                margin-top: -8px;
+              }
             entities:
               - light.hue_rgb_lamp_1
               - light.hue_rgb_lamp_2
               - light.tradfri_rgb_light_1
 
-          - type: media-control
+      - type: vertical-stack
+        cards: 
+          - type: custom:mini-media-player
             entity: media_player.chromecast9378
+            artwork: cover
+            icon: mdi:television
+            source: icon
+            hide:
+              power_state: false
 
-          - type: media-control
+          - type: custom:mini-media-player
             entity: media_player.hifi
-        
-      - type: media-control
-        entity: media_player.kitchen_speaker
+            artwork: cover
+            icon: mdi:audio-video
+            source: icon
+            hide:
+              power_state: false
 
-      - type: media-control
-        entity: media_player.downstairs_audio
+          - type: custom:mini-media-player
+            entity: media_player.kitchen_speaker
+            artwork: cover
+            icon: mdi:google-home
+            source: icon
+            hide:
+              power_state: false
+
+
+  - title: Control
+    path: control
+    id: control
+    icon: mdi:settings
+    cards:
+      - type: vertical-stack
+        cards:
+
+          - type: horizontal-stack
+            cards:
+
+              - type: "custom:button-card"
+                color_type: label-card
+                color: white
+                name: pie.home
+                icon: mdi:raspberry-pi
+                styles:
+                  icon: 
+                    - width: 2rem
+                    - padding-right: 1rem
+                  grid:
+                    - grid-template-areas: '"i n"'
+                    - grid-template-rows: 1fr
+                    - grid-template-columns: min-content 1fr
+                  name:
+                    - justify-self: start
+                  card:
+                    - padding: 0.5rem
+
+              - type: "custom:button-card"
+                color_type: card
+                color: white
+                icon: mdi:restart
+                confirmation: "Are you sure you wish to restart?"
+                tap_action:
+                  action: call-service
+                  service: shell_command.restart
+                styles:
+                  card:
+                    - width: 4rem
+                    - height: 100%
+
+              - type: "custom:button-card"
+                color_type: card
+                color: red
+                icon: mdi:power
+                confirmation: "Are you sure you wish to shutdown?"
+                tap_action:
+                  action: none
+                hold_action:
+                  action: call-service
+                  service: shell_command.halt
+                styles:
+                  card:
+                    - width: 4rem
+                    - height: 100%
+
+          - type: horizontal-stack
+            cards:
+              - type: gauge
+                name: CPU Usage
+                unit: '%'
+                entity: sensor.processor_use
+              - type: gauge
+                name: Memory
+                unit: '%'
+                entity: sensor.memory_use_percent
+              - type: gauge
+                name: Disk Usage
+                unit: '%'
+                entity: sensor.disk_use_percent

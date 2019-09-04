@@ -1,10 +1,4 @@
 ---
-internet_sensors:
-  name: Internet
-  entities:
-    - sensor.speedtest_download
-    - sensor.speedtest_upload
-    - sensor.speedtest_ping
 
 chromecasts_tv:
   name: TV
@@ -12,7 +6,6 @@ chromecasts_tv:
   entities:
     - media_player.living_room_tv
     - media_player.bedroom_tv
-    - media_player.scarletts_bedroom_tv
 
 chromecasts_audio:
   name: Audio

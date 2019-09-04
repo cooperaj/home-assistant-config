@@ -14,10 +14,12 @@ __pycache__
 
 secrets.yaml
 known_devices.yaml
+.env
 
 home-assistant.log
 html5_push_registrations.conf
 plex.conf
 core
+acme.json
 
 .vscode

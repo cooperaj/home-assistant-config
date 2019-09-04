@@ -39,6 +39,7 @@ services:
         volumes:
             - homeassistant-config:/config
             - /etc/localtime:/etc/localtime:ro
+            - /var/run/restartd_signal:/var/run/restartd_signal
         restart: always
         network_mode: host
         ports:

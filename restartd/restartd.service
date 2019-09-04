@@ -1,0 +1,9 @@
+[Unit]
+Description=Restart Daemon Service
+
+[Service]
+ExecStart=/usr/local/bin/restartd
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

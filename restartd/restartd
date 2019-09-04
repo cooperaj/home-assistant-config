@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -e
+
+if ! [ -x "$(command -v inotifywait)" ]; then
+  echo 'Error: inotify-tools not installed' >&2
+  exit 1
+fi
+
+echo "waiting" > /var/run/restartd_signal
+while inotifywait -e close_write /var/run/restartd_signal; do 
+    signal=$(cat /var/run/restartd_signal)
+    case $signal in
+        halt)
+            echo "done" > /var/run/restartd_signal
+            echo "asked to halt"
+            shutdown -h now
+            ;;
+        restart)
+            echo "done" > /var/run/restartd_signal
+            echo "asked to restart"
+            shutdown -r now
+            ;;
+        *)
+            echo "doing nothing with $signal"
+            ;;
+    esac
+done

@@ -20,6 +20,8 @@ frontend:
 lovelace:
   mode: yaml
 
+mobile_app:
+
 # Enables configuration UI
 config:
 
@@ -56,6 +58,8 @@ hacs:
 
 # Discover some devices automatically
 discovery:
+  ignore:
+    - yeelight
 
 # Enables support for tracking state changes over time
 history:
@@ -63,7 +67,7 @@ history:
 recorder:
   db_url: !secret recorder_connection_string
   purge_interval: 1
-  purge_keep_days: 14
+  purge_keep_days: 7
   include:
     domains:
       - sensor
@@ -90,21 +94,21 @@ notify:
     vapid_prv_key: !secret notify_vapid_prv_key
     vapid_email: !secret notify_vapid_email
 
-mqtt:
-  broker: mosquitto
-  username: homeassistant
-  password: !secret mqtt_password
-  birth_message:
-    topic: 'services/homeassistant/state'
-    payload: 'online'
-  will_message:
-    topic: 'services/homeassistant/state'
-    payload: 'offline'
+# mqtt:
+#   broker: mosquitto
+#   username: homeassistant
+#   password: !secret mqtt_password
+#   birth_message:
+#     topic: 'services/homeassistant/state'
+#     payload: 'online'
+#   will_message:
+#     topic: 'services/homeassistant/state'
+#     payload: 'offline'
 
-mqtt_statestream:
-  base_topic: homeassistant
-  publish_attributes: true
-  publish_timestamps: true
+# mqtt_statestream:
+#   base_topic: homeassistant
+#   publish_attributes: true
+#   publish_timestamps: true
 
 sensor:
   - platform: cert_expiry
@@ -132,7 +136,7 @@ hive:
 device_tracker:
   - platform: nmap_tracker
     hosts:
-      - 192.168.11.102 #adam
+      - 192.168.11.119 #adam
       - 192.168.11.100 #vikki
       - 192.168.11.117 #scarlett
     interval_seconds: 10
@@ -142,12 +146,19 @@ device_tracker:
 switch:
   - platform: wake_on_lan
     name: BeastlyPie
-    mac_address: !secret desktop_wol_mac
+    mac: !secret desktop_wol_mac
     host: !secret desktop_wol_ip
 
 weather:
   - platform: darksky
     api_key: !secret darksky_api_key
+    
+yeelight:
+  devices:
+    192.168.11.107:
+      name: Study
+    192.168.11.112:
+      name: Bedroom
 
 duckdns:
   domain: !secret duckdns_domain

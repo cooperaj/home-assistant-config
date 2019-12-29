@@ -9,9 +9,13 @@
       entryPoints=["websecure"]
       service="service-ha"
       rule="Host(`{{ env "HA_DOMAIN_NAME" }}`)"
-      middlewares=["redirecthttps"]
       [http.routers.ha.tls]
         certResolver="myhttpchallenge"
+    [http.routers.ha-insecure]
+      entryPoints=["web"]
+      service="service-ha"
+      rule="Host(`{{ env "HA_DOMAIN_NAME" }}`)"
+      middlewares=["redirecthttps"]
 
   [http.services]
     [http.services.service-ha]

@@ -7,7 +7,7 @@ services:
         image: traefik:v2.0
         command:
             - "--global.sendanonymoususage=false"
-            - "--api=true"
+            - "--api.insecure=true"
             - "--entrypoints.web.address=:80"
             - "--entrypoints.websecure.address=:443"
             - "--providers.docker=true"
@@ -19,6 +19,7 @@ services:
             - "--certificatesresolvers.myhttpchallenge.acme.storage=/etc/traefik/ssl/acme.json"
             - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge=true"
             - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge.entrypoint=web"
+        restart: always
         environment:
             HA_ADDRESS:
             HA_DOMAIN_NAME:
@@ -29,12 +30,15 @@ services:
             - 8080:8080
         volumes:
             # So that Traefik can listen to the Docker events
-            - /var/run/docker.sock:/var/run/docker.sock
+            - /var/run/docker.sock:/var/run/docker.sock:ro
             - traefik-config:/etc/traefik
+        logging:
+            options:
+                max-size: 10m
 
     homeassistant:
         container_name: home-assistant
-        image: homeassistant/raspberrypi2-homeassistant:0.97.2
+        image: homeassistant/raspberrypi2-homeassistant:0.103.0
         volumes:
             - homeassistant-config:/config
             - /etc/localtime:/etc/localtime:ro
@@ -61,13 +65,15 @@ services:
         restart: always
         ports:
             - 1883:1883
+        extra_hosts:
+            - "homeassistant:192.168.11.10"
         logging:
             options:
                 max-size: 10m
 
     nodered:
         container_name: nodered
-        image: nodered/node-red-docker:rpi-v8
+        image: nodered/node-red
         volumes:
             - nodered-data:/data
         restart: always
@@ -75,6 +81,8 @@ services:
             - mosquitto
         ports:
             - 1880:1880
+        extra_hosts:
+            - "homeassistant:192.168.11.10"
         logging:
             options:
                 max-size: 10m
@@ -83,6 +91,9 @@ services:
             - "traefik.http.routers.nodered.rule=Host(`${HA_DOMAIN_NAME}`) && PathPrefix(`/red`)"
             - "traefik.http.routers.nodered.entrypoints=websecure"
             - "traefik.http.routers.nodered.tls=true"
+            - "traefik.http.routers.nodered-insecure.rule=Host(`${HA_DOMAIN_NAME}`) && PathPrefix(`/red`)"
+            - "traefik.http.routers.nodered-insecure.entrypoints=web"
+            - "traefik.http.routers.nodered-insecure.middlewares=redirecthttps@file"
 
 volumes:
     traefik-config:

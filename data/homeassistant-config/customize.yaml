@@ -18,6 +18,9 @@ light.hue_white_lamp_2:
 light.yeelight_color1_34ce008d08b8:
   friendly_name: Light
 
+media_player.chromecastultra5833:
+  friendly_name: Living Room TV
+
 person.adam:
   entity_picture: '/local/adam.jpg'
 person.vikki:

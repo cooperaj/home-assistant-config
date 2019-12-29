@@ -9,10 +9,25 @@
 - platform: group
   name: "House Lights"
   entities:
-    - light.yeelight_color1_7811dca200fb
-    - light.yeelight_color1_34ce008d08b8
+    - light.bedroom
+    - light.study
     - light.hue_rgb_lamp_1
     - light.hue_rgb_lamp_2
     - light.tradfri_rgb_light_1 
     - light.hue_white_lamp_1
+    - light.hue_white_lamp_2
+
+- platform: group
+  name: "Downstairs Lights"
+  entities:
+    - light.hue_rgb_lamp_1
+    - light.hue_rgb_lamp_2
+    - light.tradfri_rgb_light_1 
+    - light.hue_white_lamp_1
+
+- platform: group
+  name: "Upstairs Lights"
+  entities:
+    - light.bedroom
+    - light.study
     - light.hue_white_lamp_2

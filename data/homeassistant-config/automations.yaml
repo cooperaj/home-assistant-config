@@ -13,7 +13,9 @@
   - data:
       entity_id: light.living_room_lights
     service: light.turn_on
-    
+  - data:
+      entity_id: light.yeelight_color1_7811dca200fb
+    service: light.turn_on
 - id: h_nighttime_lights_off_automation
   alias: Turn off lights
   trigger:
@@ -21,11 +23,11 @@
     platform: time
   condition:
   - condition: state
-    entity_id: device_tracker.homeassistant_pixel2
-    state: 'not_home'
+    entity_id: device_tracker.adams_pixel4
+    state: not_home
   - condition: state
     entity_id: device_tracker.vikkis_pixel2
-    state: 'not_home'
+    state: not_home
   action:
   - data:
       entity_id: light.house_lights

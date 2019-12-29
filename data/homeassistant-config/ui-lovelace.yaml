@@ -12,11 +12,11 @@ resources:
     type: module
   - url: /local/mini-graph-card-bundle.js?v=0.5.0
     type: module
-  - url: /local/simple-thermostat.js?v=0.26.0-0
+  - url: /community_plugin/simple-thermostat/simple-thermostat.js
     type: module
-  - url: /community_plugin/vertical-stack-in-card/vertical-stack-in-card.js?v=0.1.3
+  - url: /community_plugin/vertical-stack-in-card/vertical-stack-in-card.js
     type: js
-  - url: /community_plugin/lovelace-card-mod/card-mod.js?v=3
+  - url: /community_plugin/lovelace-card-mod/card-mod.js
     type: module
 
 views:
@@ -43,14 +43,23 @@ views:
       - type: custom:simple-thermostat
         name: Central Heating
         entity: climate.heating
+        icon:
+          idle: mdi:radiator-disabled
+          heat: mdi:radiator
         hide:
           state: true
           temperature: true
-        modes: 
-          auto:
-            name: Schedule
-          heat:
-            name: Manual
+        control:
+          hvac:
+            auto:
+              name: Schedule
+            heat: false
+            "off":
+              name: "Off"
+          preset:
+            boost: 
+              icon: mdi:fire
+            none: false
         sensors:
           - entity: sensor.hive_current_temperature
             name: Currently
@@ -79,7 +88,7 @@ views:
     icon: mdi:television
     cards:
       - type: custom:mini-media-player
-        entity: media_player.chromecast9378
+        entity: media_player.chromecastultra5833
         artwork: cover
         icon: mdi:television
         source: icon
@@ -247,13 +256,13 @@ views:
         title: Bedroom
         show_header_toggle: false
         entities:
-          - light.yeelight_color1_7811dca200fb
+          - light.bedroom
 
       - type: entities
         title: Study
         show_header_toggle: false
         entities:
-          - light.yeelight_color1_34ce008d08b8
+          - light.study
 
       - type: entities
         title: Other
@@ -271,7 +280,7 @@ views:
       - type: horizontal-stack
         cards:
           - type: "custom:button-card"
-            entity: light.yeelight_color1_7811dca200fb
+            entity: light.bedroom
             icon: mdi:lightbulb
             color: auto
             name: Bedroom 
@@ -279,7 +288,7 @@ views:
               action: more-info
 
           - type: "custom:button-card"
-            entity: light.yeelight_color1_34ce008d08b8
+            entity: light.study
             icon: mdi:lightbulb
             color: auto
             name: Study
@@ -354,7 +363,7 @@ views:
       - type: vertical-stack
         cards: 
           - type: custom:mini-media-player
-            entity: media_player.chromecast9378
+            entity: media_player.chromecastultra5833
             artwork: cover
             icon: mdi:television
             source: icon

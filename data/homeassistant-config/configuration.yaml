@@ -84,6 +84,7 @@ recorder:
       - call_service
     entities:
       - sensor.weather_symbol
+      - sensor.time
 
 # View all events in a logbook
 logbook:
@@ -126,6 +127,8 @@ sensor:
         arg: /
   - platform: template
     sensors: !include template_sensors.yaml
+  - platform: ring
+  - platform: time_date
       
         
 # Text to speech
@@ -136,9 +139,16 @@ hive:
   username: !secret hive_username
   password: !secret hive_password
 
+ring:
+  username: !secret ring_username
+  password: !secret ring_password
+
 meross_cloud:
   username: !secret meross_username
   password: !secret meross_password
+
+camera:
+  - platform: ring
 
 device_tracker:
   - platform: nmap_tracker
@@ -166,6 +176,8 @@ yeelight:
       name: Study
     192.168.11.112:
       name: Bedroom
+    192.168.11.120:
+      name: Utility
 
 input_text:
   washing_machine_enriched_status:

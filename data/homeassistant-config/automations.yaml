@@ -32,3 +32,32 @@
   - data:
       entity_id: light.house_lights
     service: light.turn_off
+- id: k_washing_machine_tracking
+  alias: Refresh Washing Machine Info
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: sensor.washing_machine_status
+  action:
+  - service: input_text.set_value
+    data_template:
+      entity_id: input_text.washing_machine_enriched_status
+      value: "{% if trigger.to_state.state == \"Running\" %}\n  {{ \"Running\" }}\n\
+        {% elif trigger.to_state.state == \"On\" and trigger.from_state.state == \"\
+        Running\" %}\n  {{ \"On_After_Running\" }}\n{% elif trigger.to_state.state\
+        \ == \"On\" and trigger.from_state.state == \"Off\" %}\n  {{ \"On_After_Off\"\
+        \ }}\n{% else %}\n  {{ \"Off\" }}\n{% endif %}"
+- id: '1587914016435'
+  alias: Washing machine finished notification
+  description: ''
+  trigger:
+  - entity_id: input_text.washing_machine_enriched_status
+    from: Running
+    platform: state
+    to: On_After_Running
+  condition: []
+  action:
+  - data:
+      message: The washing you put on is done!
+      title: Washing Machine has finished
+    service: notify.mobile_app_pixel_4

@@ -133,6 +133,10 @@ hive:
   username: !secret hive_username
   password: !secret hive_password
 
+meross_cloud:
+  username: !secret meross_username
+  password: !secret meross_password
+
 device_tracker:
   - platform: nmap_tracker
     hosts:
@@ -160,9 +164,10 @@ yeelight:
     192.168.11.112:
       name: Bedroom
 
-duckdns:
-  domain: !secret duckdns_domain
-  access_token: !secret duckdns_access_token
+input_text:
+  washing_machine_enriched_status:
+    name: 'Washing Machine Enriched Status'
+    initial: Off
 
 light: !include lights.yaml
 group: !include groups.yaml

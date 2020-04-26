@@ -29,3 +29,35 @@ darksky_outside_temperature:
   friendly_name: Temperature
   unit_of_measurement: '°C'
   value_template: "{{ state_attr('weather.dark_sky', 'temperature') }}"
+
+washing_machine_status:
+  friendly_name: 'Washing Machine Status'
+  value_template:  >
+    {% if states.sensor.washing_machine .state | float > 2.5 %}
+      {{ "Running" }}
+    {% elif states.sensor.washing_machine .state | float > 1.6 %}
+      {{ "On" }}
+    {% else %}
+      {{ "Off" }}
+    {% endif %}
+    
+washing_machine_info:
+  friendly_name: 'Washing Machine Info'
+  entity_id: sensor.time
+  value_template:  >
+    {%- macro as_formatted_elapsed_time(now, other_date_time) %}
+    {% set duration = as_timestamp(now) - as_timestamp(other_date_time) %}
+    {% set seconds = (duration % 60) | int %}
+    {% set minutes = ((duration / 60) | int) % 60 %}
+    {% set hours = (duration / 3600) | int %}
+    {{ [hours, "hours", minutes, "minutes", seconds, "seconds"] | join(' ') }}
+    {%- endmacro %}
+    {% if states.input_text.washing_machine_enriched_status.state == "Running" %}
+      Washing machine running for: {{ as_formatted_elapsed_time(now(), states.input_text.washing_machine_enriched_status.last_changed)}}
+    {% elif states.input_text.washing_machine_enriched_status.state == "On_After_Running" %}
+      Clothes left in the washing machine for: {{ as_formatted_elapsed_time(now(), states.input_text.washing_machine_enriched_status.last_changed)}}
+    {% elif states.input_text.washing_machine_enriched_status.state == "On_After_Off" %}
+      {{ "Washing machine ready to start" }}
+    {% else %}
+      {{ "Washing machine is off" }}
+    {% endif %}

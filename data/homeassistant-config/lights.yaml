@@ -1,33 +1,38 @@
 ---
-- platform: group
-  name: "Living Room Lights"
-  entities:
-    - light.hue_rgb_lamp_1
-    - light.hue_rgb_lamp_2
-    - light.tradfri_rgb_light_1 
 
 - platform: group
   name: "House Lights"
   entities:
+    - light.hallway
+    - light.landing
+    - light.kitchen
+    - light.living_room
     - light.bedroom
     - light.study
-    - light.hue_rgb_lamp_1
-    - light.hue_rgb_lamp_2
-    - light.tradfri_rgb_light_1 
-    - light.hue_white_lamp_1
-    - light.hue_white_lamp_2
 
 - platform: group
   name: "Downstairs Lights"
   entities:
-    - light.hue_rgb_lamp_1
-    - light.hue_rgb_lamp_2
-    - light.tradfri_rgb_light_1 
-    - light.hue_white_lamp_1
+    - light.hallway
+    - light.kitchen
+    - light.utility
+    - light.living_room
 
 - platform: group
   name: "Upstairs Lights"
   entities:
+    - light.landing
     - light.bedroom
     - light.study
-    - light.hue_white_lamp_2
+
+- platform: group
+  name: "Kitchen Lights"
+  entities:
+    - light.kitchen_conbee
+    - light.utility
+
+- platform: group
+  name: "Living Room Lights"
+  entities:
+    - light.living_room
+    - light.living_room_conbee

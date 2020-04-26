@@ -36,10 +36,13 @@ cloud:
         - scene
       exclude_entities:
         - light.house_lights
-        - light.living_room_lights
         - light.living_room
         - light.hallway
         - light.landing
+        - light.kitchen
+        - light.dimmable_light_1
+        - light.dimmable_light_2
+        - light.dimmable_light_3
 
 http:
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.

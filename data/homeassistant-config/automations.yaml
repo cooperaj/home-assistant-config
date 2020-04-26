@@ -13,9 +13,6 @@
   - data:
       entity_id: light.living_room_lights
     service: light.turn_on
-  - data:
-      entity_id: light.yeelight_color1_7811dca200fb
-    service: light.turn_on
 - id: h_nighttime_lights_off_automation
   alias: Turn off lights
   trigger:
@@ -47,6 +44,86 @@
         Running\" %}\n  {{ \"On_After_Running\" }}\n{% elif trigger.to_state.state\
         \ == \"On\" and trigger.from_state.state == \"Off\" %}\n  {{ \"On_After_Off\"\
         \ }}\n{% else %}\n  {{ \"Off\" }}\n{% endif %}"
+- id: '1580997397448'
+  alias: Kitchen switch to turn on Utility light
+  description: ''
+  trigger:
+  - device_id: 405f9aa8b00349f1b203cda90c8c777c
+    domain: deconz
+    platform: device
+    subtype: turn_on
+    type: remote_button_short_press
+  condition: []
+  action:
+  - entity_id: light.utility
+    service: light.turn_on
+- id: '1580997532909'
+  alias: Kitchen switch to turn off Utility light
+  description: ''
+  trigger:
+  - device_id: 7aae0822acf044209e671348fbca46a4
+    domain: deconz
+    platform: device
+    subtype: turn_off
+    type: remote_button_short_press
+  condition: []
+  action:
+  - entity_id: light.utility
+    service: light.turn_off
+- id: '1581337828561'
+  alias: Kitchen switch to turn on Utility light
+  description: ''
+  trigger:
+  - device_id: 7aae0822acf044209e671348fbca46a4
+    domain: deconz
+    platform: device
+    subtype: turn_on
+    type: remote_button_short_press
+  condition: []
+  action:
+  - entity_id: light.utility
+    service: light.turn_on
+- id: '1582901536127'
+  alias: Window open warning
+  description: ''
+  trigger:
+  - entity_id: light.living_room
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.front_window_1
+    state: 'on'
+  action:
+  - entity_id: light.living_room
+    service: light.turn_on
+- id: '1587912190991'
+  alias: Landing switch to turn on Hallway/Landing light
+  description: ''
+  trigger:
+  - device_id: 3e1d3ba7c4094cd3a7af5e022a88d24d
+    domain: deconz
+    platform: device
+    subtype: turn_on
+    type: remote_button_short_press
+  condition: []
+  action:
+  - entity_id: light.hallway, light.landing
+    service: light.turn_on
+- id: '1587913188021'
+  alias: Landing switch to turn off Hallway/Landing light
+  description: ''
+  trigger:
+  - device_id: 3e1d3ba7c4094cd3a7af5e022a88d24d
+    domain: deconz
+    platform: device
+    subtype: turn_off
+    type: remote_button_short_press
+  condition: []
+  action:
+  - entity_id: light.hallway, light.landing
+    service: light.turn_off
 - id: '1587914016435'
   alias: Washing machine finished notification
   description: ''

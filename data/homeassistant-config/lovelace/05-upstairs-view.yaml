@@ -1,0 +1,46 @@
+---
+
+title: Upstairs
+path: upstairs
+id: 05-upstairs
+cards:
+  - type: horizontal-stack
+    cards:
+      - type: "custom:button-card"
+        entity: light.bedroom
+        icon: mdi:lightbulb
+        color: auto
+        name: Bedroom 
+        hold_action:
+          action: more-info
+
+      - type: "custom:button-card"
+        entity: light.study
+        icon: mdi:lightbulb
+        color: auto
+        name: Study
+        hold_action:
+          action: more-info
+
+      - type: "custom:button-card"
+        entity: switch.beastlypie
+        name: Study Computer
+        icon: mdi:desktop-classic
+        hold_action: 
+          action: more-info  
+
+  - type: custom:mini-media-player
+    entity: media_player.bedroom_speaker
+    artwork: cover
+    icon: mdi:speaker
+    source: icon
+    hide:
+      power_state: false
+
+  - type: custom:mini-media-player
+    entity: media_player.bedroom_tv
+    artwork: cover
+    icon: mdi:television
+    source: icon
+    hide:
+      power_state: false

@@ -1,0 +1,106 @@
+---
+
+title: Audio
+path: audio
+id: 03-audio
+icon: mdi:music
+cards:
+  - type: vertical-stack
+    cards:
+      - type: custom:mini-media-player
+        entity: media_player.hifi
+        artwork: cover
+        icon: mdi:audio-video
+        source: icon
+        hide:
+          power_state: false
+
+      - type: custom:mini-media-player
+        entity: media_player.kitchen_speaker
+        artwork: cover
+        icon: mdi:google-home
+        source: icon
+        hide:
+          power_state: false
+
+      - type: custom:mini-media-player
+        entity: media_player.bedroom_speaker
+        artwork: cover
+        icon: mdi:speaker
+        source: icon
+        hide:
+          power_state: false
+
+  - type: entities
+    entities:
+      - type: custom:mini-media-player
+        entity: media_player.downstairs_audio
+        icon: mdi:speaker
+        info: short
+        group: true
+        hide:
+          volume: true
+          power: true
+          progress: true
+
+      - type: custom:mini-media-player
+        entity: media_player.hifi
+        icon: mdi:audio-video
+        group: true
+        artwork: none
+        hide:
+          controls: true
+          info: true
+          progress: true
+
+      - type: custom:mini-media-player
+        entity: media_player.kitchen_speaker
+        icon: mdi:google-home
+        group: true
+        artwork: none
+        hide:
+          controls: true
+          info: true
+          progress: true
+
+  - type: entities
+    entities:
+      - type: custom:mini-media-player
+        entity: media_player.house_audio
+        icon: mdi:speaker
+        info: short
+        group: true
+        hide:
+          volume: true
+          power: true
+          progress: true
+
+      - type: custom:mini-media-player
+        entity: media_player.hifi
+        icon: mdi:audio-video
+        group: true
+        artwork: none
+        hide:
+          controls: true
+          info: true
+          progress: true
+
+      - type: custom:mini-media-player
+        entity: media_player.kitchen_speaker
+        icon: mdi:google-home
+        group: true
+        artwork: none
+        hide:
+          controls: true
+          info: true
+          progress: true
+
+      - type: custom:mini-media-player
+        entity: media_player.bedroom_speaker
+        icon: mdi:speaker
+        group: true
+        artwork: none
+        hide:
+          controls: true
+          info: true
+          progress: true

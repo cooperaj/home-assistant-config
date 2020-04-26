@@ -1,0 +1,105 @@
+---
+
+title: Downstairs 
+path: downstairs  
+id: 06-downstairs     
+cards:
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:button-card
+        entity: light.living_room
+        name: Living Room
+        show_icon: false
+        tap_action: 
+          action: toggle
+        hold_action: 
+          action: more-info
+        styles:
+          card:
+            - -webkit-box-shadow: unset
+            - box-shadow: unset
+            - padding: 24px 16px 16px
+          name:
+            - color: var(--button-card-light-color)
+            - font-family: var(--ha-card-header-font-family)
+            - font-size: var(--ha-card-header-font-size, 24px)
+            - letter-spacing: -0.012em
+            - line-height: 32px
+            - justify-self: start
+          grid:
+            - grid-template-areas: '"n"'
+            - grid-template-rows: 1fr
+            - grid-template-columns: min-content 1fr
+      - type: entities
+        style: |
+          .card-content {
+            padding-top: 0;
+            margin-top: -8px;
+          }
+        entities:
+          - light.hue_rgb_lamp_1
+          - light.hue_rgb_lamp_2
+          - light.lamp
+
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:button-card
+        entity: light.kitchen_lights
+        name: Kitchen
+        show_icon: false
+        tap_action: 
+          action: toggle
+        hold_action: 
+          action: more-info
+        styles:
+          card:
+            - -webkit-box-shadow: unset
+            - box-shadow: unset
+            - padding: 24px 16px 16px
+          name:
+            - color: var(--button-card-light-color)
+            - font-family: var(--ha-card-header-font-family)
+            - font-size: var(--ha-card-header-font-size, 24px)
+            - letter-spacing: -0.012em
+            - line-height: 32px
+            - justify-self: start
+          grid:
+            - grid-template-areas: '"n"'
+            - grid-template-rows: 1fr
+            - grid-template-columns: min-content 1fr
+      - type: entities
+        style: |
+          .card-content {
+            padding-top: 0;
+            margin-top: -8px;
+          }
+        entities:
+          - entity: light.kitchen_conbee
+            name: Ceiling
+          - light.utility
+    
+  - type: vertical-stack
+    cards: 
+      - type: custom:mini-media-player
+        entity: media_player.chromecastultra5833
+        artwork: cover
+        icon: mdi:television
+        source: icon
+        hide:
+          power_state: false
+
+      - type: custom:mini-media-player
+        entity: media_player.hifi
+        artwork: cover
+        icon: mdi:audio-video
+        source: icon
+        hide:
+          power_state: false
+
+      - type: custom:mini-media-player
+        entity: media_player.kitchen_speaker
+        artwork: cover
+        icon: mdi:google-home
+        source: icon
+        hide:
+          power_state: false

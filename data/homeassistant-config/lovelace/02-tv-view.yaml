@@ -1,0 +1,22 @@
+---
+
+title: TV
+path: tv
+id: 02-tv
+icon: mdi:television
+cards:
+  - type: custom:mini-media-player
+    entity: media_player.chromecastultra5833
+    artwork: cover
+    icon: mdi:television
+    source: icon
+    hide:
+      power_state: false
+
+  - type: custom:mini-media-player
+    entity: media_player.bedroom_tv
+    artwork: cover
+    icon: mdi:television
+    source: icon
+    hide:
+      power_state: false

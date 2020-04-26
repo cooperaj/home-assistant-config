@@ -1,0 +1,75 @@
+---
+
+title: Control
+visible:
+  - user: 1a1439d4195d4376b048edcbaded8ef5
+path: control
+id: 99-control
+icon: mdi:settings
+cards:
+  - type: vertical-stack
+    cards:
+
+      - type: horizontal-stack
+        cards:
+
+          - type: "custom:button-card"
+            color_type: label-card
+            color: white
+            name: pie.home
+            icon: mdi:raspberry-pi
+            styles:
+              icon: 
+                - width: 2rem
+                - padding-right: 1rem
+              grid:
+                - grid-template-areas: '"i n"'
+                - grid-template-rows: 1fr
+                - grid-template-columns: min-content 1fr
+              name:
+                - justify-self: start
+              card:
+                - padding: 0.5rem
+
+          - type: "custom:button-card"
+            color_type: card
+            color: white
+            icon: mdi:restart
+            confirmation: "Are you sure you wish to restart?"
+            tap_action:
+              action: call-service
+              service: shell_command.restart
+            styles:
+              card:
+                - width: 4rem
+                - height: 100%
+
+          - type: "custom:button-card"
+            color_type: card
+            color: red
+            icon: mdi:power
+            confirmation: "Are you sure you wish to shutdown?"
+            tap_action:
+              action: none
+            hold_action:
+              action: call-service
+              service: shell_command.halt
+            styles:
+              card:
+                - width: 4rem
+                - height: 100%
+
+      - type: horizontal-stack
+        cards:
+          - type: gauge
+            name: CPU Usage
+            unit: '%'
+            entity: sensor.processor_use
+          - type: gauge
+            name: Memory
+            unit: '%'
+            entity: sensor.memory_use_percent
+          - type: gauge
+            name: Disk Usage
+            unit: '%'
+            entity: sensor.disk_use_percent

@@ -1,12 +1,14 @@
 data/mosquitto-config
 data/mosquitto-data
 data/nodered-data
+data/deconz-config
 
 # home-assistant things
 .cloud
 .storage
 .HA_VERSION
 .uuid
+*.pickle
 
 deps
 tts

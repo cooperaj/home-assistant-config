@@ -1,108 +1,115 @@
-version: '3'
+version: '2.4'
 
 services:
     reverse-proxy:
         container_name: reverse-proxy
-        # The official v2.0 Traefik docker image
-        image: traefik:v2.0
+        # The official v2.2 Traefik docker image
+        image: traefik:v2.2
         command:
             - "--global.sendanonymoususage=false"
-            - "--api.insecure=true"
+            - "--api.dashboard=true"
+            - "--entrypoints.dns.address=:53/udp"
             - "--entrypoints.web.address=:80"
             - "--entrypoints.websecure.address=:443"
+            - "--entrypoints.mqtt.address=:1883"
+            - "--entrypoints.mysql.address=:3306"
+            - "--entrypoints.phosconws.address=:8443"
             - "--providers.docker=true"
             - "--providers.docker.exposedbydefault=false"
+            - "--providers.docker.network=traefik_proxy"
             - "--providers.file=true"
             - "--providers.file.filename=/etc/traefik/providers-config.toml"
-            - "--certificatesresolvers.myhttpchallenge=true"
-            - "--certificatesresolvers.myhttpchallenge.acme.email=${ACME_EMAIL}"
-            - "--certificatesresolvers.myhttpchallenge.acme.storage=/etc/traefik/ssl/acme.json"
-            - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge=true"
-            - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge.entrypoint=web"
+            - "--certificatesresolvers.le=true"
+            - "--certificatesresolvers.le.acme.email=${LETSENCRYPT_ACME_EMAIL}"
+            - "--certificatesresolvers.le.acme.storage=/etc/traefik/ssl/acme.json"
+            - "--certificatesresolvers.le.acme.httpchallenge=true"
+            - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
         restart: always
         environment:
-            HA_ADDRESS:
-            HA_DOMAIN_NAME:
+            ACME_EMAIL: "${LETSENCRYPT_ACME_EMAIL}"
+            ADDRESS: "192.168.11.10"
+            HA_DOMAIN_NAME: "${EXTERNAL_DOMAIN}"
+            LAN_DOMAIN_NAME: "${INTERNAL_DOMAIN}"
+        networks:
+            - traefik_proxy
+        extra_hosts: 
+            - host.docker.internal:172.17.0.1
         ports:
+            - 53:53/udp
             - 80:80
             - 443:443
-            # The Web UI (enabled by --api)
-            - 8080:8080
+            - 1883:1883
+            - 3306:3306
+            - 8443:8443 #phoscon
         volumes:
             # So that Traefik can listen to the Docker events
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - traefik-config:/etc/traefik
-        logging:
-            options:
-                max-size: 10m
-
-    homeassistant:
-        container_name: home-assistant
-        image: homeassistant/raspberrypi2-homeassistant:0.103.0
-        volumes:
-            - homeassistant-config:/config
-            - /etc/localtime:/etc/localtime:ro
-            - /var/run/restartd_signal:/var/run/restartd_signal
-        restart: always
-        network_mode: host
-        ports:
-            - 8123:8123
-        depends_on:
-            - mosquitto
-        extra_hosts:
-            - "mysql:192.168.11.10"
-            - "mosquitto:192.168.11.10"
-        logging:
-            options:
-                max-size: 10m
-
-    mosquitto:
-        container_name: mosquitto
-        image: eclipse-mosquitto
-        volumes:
-            - mosquitto-data:/mosquitto/data
-            - mosquitto-config:/mosquitto/config
-        restart: always
-        ports:
-            - 1883:1883
-        extra_hosts:
-            - "homeassistant:192.168.11.10"
-        logging:
-            options:
-                max-size: 10m
-
-    nodered:
-        container_name: nodered
-        image: nodered/node-red
-        volumes:
-            - nodered-data:/data
-        restart: always
-        depends_on:
-            - mosquitto
-        ports:
-            - 1880:1880
-        extra_hosts:
-            - "homeassistant:192.168.11.10"
-        logging:
-            options:
-                max-size: 10m
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.nodered.rule=Host(`${HA_DOMAIN_NAME}`) && PathPrefix(`/red`)"
-            - "traefik.http.routers.nodered.entrypoints=websecure"
-            - "traefik.http.routers.nodered.tls=true"
-            - "traefik.http.routers.nodered-insecure.rule=Host(`${HA_DOMAIN_NAME}`) && PathPrefix(`/red`)"
-            - "traefik.http.routers.nodered-insecure.entrypoints=web"
-            - "traefik.http.routers.nodered-insecure.middlewares=redirecthttps@file"
+            - "traefik.http.routers.dashboard.rule=Host(`traefik.${INTERNAL_DOMAIN}`)"
+            - "traefik.http.routers.dashboard.entrypoints=web"
+            - "traefik.http.routers.dashboard.service=api@internal"
+        logging:
+            options:
+                max-size: 10m
+    
+    portainer:
+        container_name: portainer
+        image: portainer/portainer:1.24.0
+        restart: always
+        networks:
+            - traefik_proxy
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - portainer-data:/data
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.portainer.rule=Host(`portainer.${INTERNAL_DOMAIN}`)"
+            - "traefik.http.routers.portainer.entrypoints=web"
+            - "traefik.http.routers.portainer.service=portainer"
+            - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+        logging:
+            options:
+                max-size: 10m
+
+    dyndns:
+        container_name: dyndns
+        image: oznu/cloudflare-ddns:latest
+        restart: always
+        networks:
+            - host_applications
+        environment:
+            API_KEY: "${CLOUDFLARE_API_KEY}"
+            ZONE: "${DYNDNS_ZONE}"
+            SUBDOMAIN: "${DYNDNS_SUBDOMAIN}"
+
+
+networks:
+    host_applications:
+        name: applications
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.18.0.0/24
+                  gateway: 172.18.0.1
+    traefik_proxy:
+        name: traefik_proxy
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.24.0.0/16
+                  gateway: 172.24.0.1
+
 
 volumes:
     traefik-config:
-        external: true
-    homeassistant-config:
-        external: true
-    mosquitto-data:
-        external: true
-    mosquitto-config:
-        external: true
-    nodered-data:
-        external: true
+        name: traefik-config
+        driver: local-persist
+        driver_opts:
+            mountpoint: "${PERSIST_DATA_PATH}/data/traefik-config"
+    portainer-data:
+        name: portainer-data
+        driver: local-persist
+        driver_opts:
+            mountpoint: "${PERSIST_DATA_PATH}/data/portainer-data"

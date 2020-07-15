@@ -1,0 +1,103 @@
+version: '2.4'
+
+services:
+    cloudflared:
+        container_name: cloudflared
+        image: visibilityspots/cloudflared
+        restart: unless-stopped
+        networks:
+            net:
+                ipv4_address: 172.20.0.2
+        logging:
+            options:
+                max-size: 10m
+
+    dnsmasq:
+        container_name: dnsmasq
+        image: anzevalher/dnsmasq:2
+        restart: unless-stopped
+        cap_add:
+            - NET_ADMIN
+        command:
+            - "--keep-in-foreground"
+            - "--user=dnsmasq"
+            - "--bind-interfaces"
+            - "--no-resolv"
+            - "--log-facility=-"
+            - "--no-hosts"
+            - "--server=172.20.0.2#5054"
+            - "--address=/routerpie.home/192.168.11.1"
+            - "--address=/pie.home/192.168.11.10"
+        networks:
+            net: 
+                ipv4_address: 172.20.0.3
+            traefik_proxy:
+        logging:
+            options:
+                max-size: 10m
+        labels:
+            - "traefik.enable=true"
+            - "traefik.docker.network=traefik_proxy"
+            - "traefik.udp.routers.dnsmasq.entrypoints=dns"
+            - "traefik.udp.routers.dnsmasq.service=dnsmasq"
+            - "traefik.udp.services.dnsmasq.loadbalancer.server.port=53"
+
+    pihole:
+        container_name: pihole
+        image: pihole/pihole
+        hostname: "pihole.${INTERNAL_DOMAIN}"
+        restart: unless-stopped
+        environment:
+            TZ: 'Europe/London'
+            WEBPASSWORD: ''
+            VIRTUAL_HOST: "pihole.${INTERNAL_DOMAIN}"
+            ServerIP: 192.168.11.16
+            DNS1: 172.20.0.3
+            DNS2: 1.1.1.1
+            DNSMASQ_LISTENING: local
+        volumes:
+            - pihole-config:/etc/pihole
+            - dnsmasq-config:/etc/dnsmasq.d
+        dns:
+            - 127.0.0.1
+            - 172.20.0.3
+        networks:
+            net: 
+               ipv4_address: 172.20.0.4
+            lan:
+            traefik_proxy:
+        logging:
+            options:
+                max-size: 10m
+        labels:
+            - "traefik.enable=true"
+            - "traefik.docker.network=traefik_proxy"
+            - "traefik.http.routers.pihole-insecure.rule=Host(`pihole.${INTERNAL_DOMAIN}`)"
+            - "traefik.http.routers.pihole-insecure.entryPoints=web"
+            - "traefik.http.services.service-pihole.loadbalancer.server.port=80"
+
+
+networks:
+    net:
+        name: dns
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.20.0.0/24
+    lan:
+        external: true
+    traefik_proxy:
+        external: true
+
+
+volumes:
+    pihole-config:
+        name: pihole-config
+        driver: local-persist
+        driver_opts:
+            mountpoint: "${PERSIST_DATA_PATH}/data/pihole-config"
+    dnsmasq-config:
+        name: dnsmasq-config
+        driver: local-persist
+        driver_opts:
+            mountpoint: "${PERSIST_DATA_PATH}/data/dnsmasq-config"

@@ -1,0 +1,137 @@
+version: '2.4'
+
+services:
+    homeassistant:
+        container_name: home-assistant
+        image: homeassistant/raspberrypi4-homeassistant:stable
+        volumes:
+            - homeassistant-config:/config
+            - /etc/localtime:/etc/localtime:ro
+            - /var/run/restartd_signal:/var/run/restartd_signal
+        restart: always
+        network_mode: host
+        environment:
+            TZ: Europe/London
+        logging:
+            options:
+                max-size: 10m
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.ha-internal.rule=Host(`homeassistant.${INTERNAL_DOMAIN}`)"
+            - "traefik.http.routers.ha-internal.entrypoints=web"
+            - "traefik.http.routers.ha-insecure.rule=Host(`${EXTERNAL_DOMAIN}`)"
+            - "traefik.http.routers.ha-insecure.entrypoints=web"
+            - "traefik.http.routers.ha-insecure.middlewares=redirecthttps@file,riptp@file"
+            - "traefik.http.routers.ha.rule=Host(`${EXTERNAL_DOMAIN}`)"
+            - "traefik.http.routers.ha.entrypoints=websecure"
+            - "traefik.http.routers.ha.middlewares=riptp@file"
+            - "traefik.http.routers.ha.tls=true"
+            - "traefik.http.routers.ha.tls.certresolver=le"
+            - "traefik.http.services.ha.loadbalancer.server.port=8123"
+                
+    deconz:
+        container_name: deconz
+        image: marthoc/deconz
+        volumes:
+            - deconz-config:/root/.local/share/dresden-elektronik/deCONZ
+            - /etc/localtime:/etc/localtime:ro
+        restart: always
+        networks:
+            - net
+            - traefik_proxy
+        environment:
+            DECONZ_DEVICE: /dev/ttyACM0
+            DECONZ_WS_PORT: 8443
+            DECONZ_VNC_MODE: 1
+        devices:
+            - /dev/ttyACM0
+        logging:
+            options:
+                max-size: 10m
+        labels:
+            - "traefik.enable=true"
+            - "traefik.docker.network=traefik_proxy"
+            - "traefik.http.routers.phoscon.rule=Host(`phoscon.${INTERNAL_DOMAIN}`)"
+            - "traefik.http.routers.phoscon.entrypoints=web"
+            - "traefik.http.routers.phoscon.service=phoscon"
+            - "traefik.http.services.phoscon.loadbalancer.server.port=80"
+            - "traefik.http.routers.phoscon-ws.rule=Host(`phoscon.${INTERNAL_DOMAIN}`)"
+            - "traefik.http.routers.phoscon-ws.entrypoints=phosconws"
+            - "traefik.http.routers.phoscon-ws.service=phoscon-ws"
+            - "traefik.http.services.phoscon-ws.loadbalancer.server.port=8443"
+            
+    mosquitto:
+        container_name: mosquitto
+        image: eclipse-mosquitto
+        volumes:
+            - mosquitto-data:/mosquitto/data
+            - mosquitto-config:/mosquitto/config
+        restart: always
+        networks:
+            - net
+            - traefik_proxy
+        logging:
+            options:
+                max-size: 10m
+        labels:
+            - traefik.enable=true
+            - traefik.docker.network=traefik_proxy
+            - traefik.tcp.routers.mosquitto.entrypoints=mqtt
+            - traefik.tcp.routers.mosquitto.rule=HostSNI(`*`)
+            - traefik.tcp.routers.mosquitto.service=mosquitto
+            - traefik.tcp.services.mosquitto.loadbalancer.server.port=1883
+
+    mysql:
+        container_name: database
+        image: mariadb:latest
+        volumes: 
+            - mariadb-data:/var/lib/mysql
+        restart: always
+        networks:
+            - net
+            - traefik_proxy
+        logging:
+            options:
+                max-size: 10m
+        labels:
+            - traefik.enable=true
+            - traefik.docker.network=traefik_proxy
+            - traefik.tcp.routers.mariadb.entrypoints=mysql
+            - traefik.tcp.routers.mariadb.rule=HostSNI(`*`)
+            - traefik.tcp.routers.mariadb.service=mariadb
+            - traefik.tcp.services.mariadb.loadbalancer.server.port=3306
+
+
+networks:
+    net:
+        name: homeassistant
+    traefik_proxy:
+        external: true
+
+
+volumes:
+    homeassistant-config:
+        name: homeassistant-config
+        driver: local-persist
+        driver_opts:
+            mountpoint: "${PERSIST_DATA_PATH}/data/homeassistant-config"
+    deconz-config:
+        name: deconz-config
+        driver: local-persist
+        driver_opts:
+            mountpoint: "${PERSIST_DATA_PATH}/data/deconz-config"
+    mosquitto-data:
+        name: mosquitto-data
+        driver: local-persist
+        driver_opts:
+            mountpoint: "${PERSIST_DATA_PATH}/data/mosquitto-data"
+    mosquitto-config:
+        name: mosquitto-config
+        driver: local-persist
+        driver_opts:
+            mountpoint: "${PERSIST_DATA_PATH}/data/mosquitto-config"
+    mariadb-data:
+        name: mariadb-data
+        driver: local-persist
+        driver_opts:
+            mountpoint: /data/mariadb-data

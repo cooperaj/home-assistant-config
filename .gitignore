@@ -1,7 +1,7 @@
-data/mosquitto-config
 data/mosquitto-data
 data/nodered-data
 data/deconz-config
+data/portainer-data
 
 # home-assistant things
 .cloud

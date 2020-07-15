@@ -1,175 +1,34 @@
----
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
 homeassistant:
-  # Name of the location where Home Assistant is running
-  name: Home
-  # Location required to calculate the time the sun rises and sets
-  latitude: !secret latitude
-  longitude: !secret longitude
-  # Impacts weather/sunrise data (altitude above sea level in meters)
-  elevation: 75
-  # metric for Metric, imperial for Imperial
-  unit_system: metric
-  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-  time_zone: Europe/London
-  # Customization file
   customize: !include customize.yaml
-
-# Enables the frontend
-frontend:
-  themes: !include_dir_merge_named themes
-lovelace:
-  mode: yaml
-
-mobile_app:
-
-# Enables configuration UI
-config:
-
-system_health:
-
-# Enables cloud support
-cloud:
-  google_actions:
-    filter:
-      include_domains:
-        - light
-        - scene
-      exclude_entities:
-        - light.house_lights
-        - light.living_room
-        - light.hallway
-        - light.landing
-        - light.kitchen
-        - light.dimmable_light_1
-        - light.dimmable_light_2
-        - light.dimmable_light_3
-
-http:
-  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-  base_url: !secret base_url
-
-# Checks for available updates
-# Note: This component will send some information about your system to
-# the developers to assist with development of Home Assistant.
-# For more information, please see:
-# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
-updater:
-  # Optional, allows Home Assistant developers to focus on popular components.
-  # include_used_components: true
-hacs:
-  token: !secret hacs_token
-
-# Discover some devices automatically
-discovery:
-  ignore:
-    - yeelight
-
-# Enables support for tracking state changes over time
-history:
 
 recorder:
   db_url: !secret recorder_connection_string
-  purge_interval: 1
   purge_keep_days: 7
   include:
     domains:
+      - binary_sensor
       - sensor
       - light
-    entities:
-      - device_tracker.homeassistant_pixel2
-      - device_tracker.scarlettsiphone
-      - device_tracker.vikkis_pixel2
   exclude:
     event_types:
       - call_service
     entities:
-      - sensor.weather_symbol
       - sensor.time
-
-# View all events in a logbook
-logbook:
-
-# Track the sun
-sun:
-
-notify:
-  - platform: html5
-    vapid_pub_key: !secret notify_vapid_pub_key
-    vapid_prv_key: !secret notify_vapid_prv_key
-    vapid_email: !secret notify_vapid_email
-
-# mqtt:
-#   broker: mosquitto
-#   username: homeassistant
-#   password: !secret mqtt_password
-#   birth_message:
-#     topic: 'services/homeassistant/state'
-#     payload: 'online'
-#   will_message:
-#     topic: 'services/homeassistant/state'
-#     payload: 'offline'
-
-# mqtt_statestream:
-#   base_topic: homeassistant
-#   publish_attributes: true
-#   publish_timestamps: true
-
-sensor:
-  - platform: cert_expiry
-    host: !secret cert_expiry_domain
-  - platform: google_wifi
-    host: !secret google_wifi_ip
-  - platform: systemmonitor
-    resources:
-      - type: memory_use_percent
-      - type: processor_use
-      - type: disk_use_percent
-        arg: /
-  - platform: template
-    sensors: !include template_sensors.yaml
-  - platform: ring
-  - platform: time_date
-      
-        
-# Text to speech
-tts:
-  - platform: google_translate
 
 hive:
   username: !secret hive_username
   password: !secret hive_password
 
-ring:
-  username: !secret ring_username
-  password: !secret ring_password
+mqtt:
+  broker: pie.home
+  username: homeassistant
+  password: !secret mqtt_password
+  discovery: true
 
-meross_cloud:
-  username: !secret meross_username
-  password: !secret meross_password
-
-camera:
-  - platform: ring
-
-device_tracker:
-  - platform: nmap_tracker
-    hosts:
-      - 192.168.11.119 #adam
-      - 192.168.11.100 #vikki
-      - 192.168.11.117 #scarlett
-    interval_seconds: 10
-    consider_home: 180
-    track_new_devices: no
-
-switch:
-  - platform: wake_on_lan
-    name: BeastlyPie
-    mac: !secret desktop_wol_mac
-    host: !secret desktop_wol_ip
-
-weather:
-  - platform: darksky
-    api_key: !secret darksky_api_key
-    
 yeelight:
   devices:
     192.168.11.107:
@@ -179,15 +38,40 @@ yeelight:
     192.168.11.120:
       name: Utility
 
-input_text:
-  washing_machine_enriched_status:
-    name: 'Washing Machine Enriched Status'
-    initial: Off
+device_tracker:
+  - platform: nmap_tracker
+    hosts:
+      - 192.168.11.119 #adam
+      - 192.168.11.130 #vikki
+      - 192.168.11.117 #scarlett
+    interval_seconds: 10
+    consider_home: 180
+    track_new_devices: no
 
+sensor:
+  - platform: systemmonitor
+    resources:
+      - type: memory_use_percent
+      - type: processor_use
+      - type: disk_use_percent
+        arg: /
+  - platform: template
+    sensors: !include template_sensors.yaml
+  - platform: time_date
+  - platform: command_line
+    name: CPU Temperature
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    unit_of_measurement: "°C"
+    value_template: '{{ value | multiply(0.001) | round(1) }}'
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+frontend:
+  themes: !include_dir_merge_named themes  
 light: !include lights.yaml
 group: !include groups.yaml
 automation: !include automations.yaml
-shell_command: !include shell.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
-person: !include people.yaml

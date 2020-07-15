@@ -1,4 +1,0 @@
----
-
-restart: 'echo restart > /var/run/restartd_signal'
-halt: 'echo halt > /var/run/restartd_signal'

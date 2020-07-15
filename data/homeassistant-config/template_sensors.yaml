@@ -1,7 +1,26 @@
 ---
 
+living_room_chromecast_on:
+  friendly_name: Chromecast Active
+  value_template: >
+    {{ 'Active' if state_attr('media_player.living_room_tv', 'source') == 'HDMI4' else 'Inactive' }}
+
+weather_temperature:
+  friendly_name: Weather Temperature
+  unit_of_measurement: '°C'
+  value_template: "{{ state_attr('weather.home', 'temperature') }}"
+
+aquarium_light:
+  friendly_name: Aquarium Light
+  value_template: >
+    {% if is_state('light.aquarium_light', 'on') %}
+      1.0
+    {% else %}
+      0.0
+    {% endif %}
+
 hive_current_temperature:
-  friendly_name: Temperature
+  friendly_name: Inside Temperature
   unit_of_measurement: '°C'
   value_template: "{{ state_attr('climate.heating', 'current_temperature') }}"
 
@@ -11,7 +30,7 @@ hive_heating_boost:
     {{ 'Active' if is_state_attr('climate.heating', 'preset_mode', 'boost') else 'Inactive' }}
 
 hive_thermostat_battery:
-  friendly_name: Battery
+  friendly_name: 'Hive Thermostat Battery'
   unit_of_measurement: '%'
   value_template: "{{ state_attr('climate.heating', 'battery_level')|replace('%', '')|int }}"
   icon_template: >
@@ -25,17 +44,12 @@ hive_thermostat_battery:
       mdi:battery-alert
     {% endif %}
 
-darksky_outside_temperature:
-  friendly_name: Temperature
-  unit_of_measurement: '°C'
-  value_template: "{{ state_attr('weather.dark_sky', 'temperature') }}"
-
 washing_machine_status:
   friendly_name: 'Washing Machine Status'
   value_template:  >
-    {% if states.sensor.washing_machine .state | float > 2.5 %}
+    {% if states.sensor.washing_machine_mss310_power_sensor_w_0 .state | float > 2.5 %}
       {{ "Running" }}
-    {% elif states.sensor.washing_machine .state | float > 1.6 %}
+    {% elif states.sensor.washing_machine_mss310_power_sensor_w_0 .state | float > 1.6 %}
       {{ "On" }}
     {% else %}
       {{ "Off" }}

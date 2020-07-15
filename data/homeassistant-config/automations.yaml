@@ -1,7 +1,7 @@
-- id: lr_evening_lighting_automation
+- id: lr_evening_lighting
   alias: Turn on living room lights on as the sun gets dimmer
   trigger:
-  - below: '4'
+  - below: '5.8'
     entity_id: sun.sun
     platform: numeric_state
     value_template: '{{ state.attributes.elevation }}'
@@ -13,17 +13,17 @@
   - data:
       entity_id: light.living_room_lights
     service: light.turn_on
-- id: h_nighttime_lights_off_automation
+- id: h_nighttime_lights_off
   alias: Turn off lights
   trigger:
   - at: '23:00'
     platform: time
   condition:
   - condition: state
-    entity_id: device_tracker.adams_pixel4
+    entity_id: person.adam
     state: not_home
   - condition: state
-    entity_id: device_tracker.vikkis_pixel2
+    entity_id: person.vikki
     state: not_home
   action:
   - data:
@@ -31,61 +31,21 @@
     service: light.turn_off
 - id: k_washing_machine_tracking
   alias: Refresh Washing Machine Info
-  initial_state: true
   trigger:
+  - entity_id: sensor.washing_machine_status
     platform: state
-    entity_id: sensor.washing_machine_status
   action:
-  - service: input_text.set_value
-    data_template:
+  - data_template:
       entity_id: input_text.washing_machine_enriched_status
       value: "{% if trigger.to_state.state == \"Running\" %}\n  {{ \"Running\" }}\n\
         {% elif trigger.to_state.state == \"On\" and trigger.from_state.state == \"\
         Running\" %}\n  {{ \"On_After_Running\" }}\n{% elif trigger.to_state.state\
         \ == \"On\" and trigger.from_state.state == \"Off\" %}\n  {{ \"On_After_Off\"\
         \ }}\n{% else %}\n  {{ \"Off\" }}\n{% endif %}"
-- id: '1580997397448'
-  alias: Kitchen switch to turn on Utility light
-  description: ''
-  trigger:
-  - device_id: 405f9aa8b00349f1b203cda90c8c777c
-    domain: deconz
-    platform: device
-    subtype: turn_on
-    type: remote_button_short_press
-  condition: []
-  action:
-  - entity_id: light.utility
-    service: light.turn_on
-- id: '1580997532909'
-  alias: Kitchen switch to turn off Utility light
-  description: ''
-  trigger:
-  - device_id: 7aae0822acf044209e671348fbca46a4
-    domain: deconz
-    platform: device
-    subtype: turn_off
-    type: remote_button_short_press
-  condition: []
-  action:
-  - entity_id: light.utility
-    service: light.turn_off
-- id: '1581337828561'
-  alias: Kitchen switch to turn on Utility light
-  description: ''
-  trigger:
-  - device_id: 7aae0822acf044209e671348fbca46a4
-    domain: deconz
-    platform: device
-    subtype: turn_on
-    type: remote_button_short_press
-  condition: []
-  action:
-  - entity_id: light.utility
-    service: light.turn_on
-- id: '1582901536127'
+    service: input_text.set_value
+  initial_state: true
+- id: lr_front_window_open_warning
   alias: Window open warning
-  description: ''
   trigger:
   - entity_id: light.living_room
     from: 'on'
@@ -96,37 +56,10 @@
     entity_id: binary_sensor.front_window_1
     state: 'on'
   action:
-  - entity_id: light.living_room
+  - entity_id: light.living_room_lights
     service: light.turn_on
-- id: '1587912190991'
-  alias: Landing switch to turn on Hallway/Landing light
-  description: ''
-  trigger:
-  - device_id: 3e1d3ba7c4094cd3a7af5e022a88d24d
-    domain: deconz
-    platform: device
-    subtype: turn_on
-    type: remote_button_short_press
-  condition: []
-  action:
-  - entity_id: light.hallway, light.landing
-    service: light.turn_on
-- id: '1587913188021'
-  alias: Landing switch to turn off Hallway/Landing light
-  description: ''
-  trigger:
-  - device_id: 3e1d3ba7c4094cd3a7af5e022a88d24d
-    domain: deconz
-    platform: device
-    subtype: turn_off
-    type: remote_button_short_press
-  condition: []
-  action:
-  - entity_id: light.hallway, light.landing
-    service: light.turn_off
-- id: '1587914016435'
+- id: k_washing_machine_notification
   alias: Washing machine finished notification
-  description: ''
   trigger:
   - entity_id: input_text.washing_machine_enriched_status
     from: Running
@@ -135,6 +68,169 @@
   condition: []
   action:
   - data:
+      data:
+        priority: high
+        ttl: 0
       message: The washing you put on is done!
       title: Washing Machine has finished
+    service: notify.mobile_app_pixel_4
+- id: '1590866050724'
+  alias: Kitchen switch to turn on Utility light
+  description: ''
+  trigger:
+  - device_id: 9870ec9d14714c948c75582a48ba0c9d
+    domain: deconz
+    platform: device
+    subtype: turn_on
+    type: remote_button_short_press
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.utility
+    service: light.turn_on
+- id: '1590866133707'
+  alias: Kitchen switch to turn off Utility light
+  description: ''
+  trigger:
+  - device_id: 9870ec9d14714c948c75582a48ba0c9d
+    domain: deconz
+    platform: device
+    subtype: turn_off
+    type: remote_button_short_press
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.utility
+    service: light.turn_off
+- id: '1590866248404'
+  alias: Landing switch to turn on Hallway/Landing light
+  description: ''
+  trigger:
+  - device_id: 1e684b29752540a78ff179a1d2fe202a
+    domain: deconz
+    platform: device
+    subtype: turn_on
+    type: remote_button_short_press
+  condition: []
+  action:
+  - data:
+      entity_id:
+      - light.hallway
+      - light.landing
+    service: light.turn_on
+- id: '1590866327546'
+  alias: Landing switch to turn off Hallway/Landing light
+  description: ''
+  trigger:
+  - device_id: 1e684b29752540a78ff179a1d2fe202a
+    domain: deconz
+    platform: device
+    subtype: turn_off
+    type: remote_button_short_press
+  condition: []
+  action:
+  - data:
+      entity_id:
+      - light.hallway
+      - light.landing
+    service: light.turn_off
+- id: '1590866776509'
+  alias: Landing switch long-press to turn off House lights
+  description: ''
+  trigger:
+  - device_id: 1e684b29752540a78ff179a1d2fe202a
+    domain: deconz
+    platform: device
+    subtype: turn_off
+    type: remote_button_long_release
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.house_lights
+    service: light.turn_off
+- id: '1591171997504'
+  alias: Living Room switch to turn on Lamp
+  description: ''
+  trigger:
+  - device_id: 8ba9dd8607bc434fb85968c026bbd9d3
+    domain: hue
+    platform: device
+    subtype: turn_on
+    type: remote_button_short_release
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.lamp
+    service: light.turn_on
+- id: '1591172061054'
+  alias: Living Room switch to turn off Lamp
+  description: ''
+  trigger:
+  - device_id: 8ba9dd8607bc434fb85968c026bbd9d3
+    domain: hue
+    platform: device
+    subtype: turn_off
+    type: remote_button_short_release
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.lamp
+    service: light.turn_off
+- id: '1591459127414'
+  alias: Turn off Aquarium lights
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == states(''input_datetime.aquarium_nighttime'')[0:5]
+      }}'
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.aquarium_light
+    service: light.turn_off
+- id: '1591459222965'
+  alias: Turn on Aquarium lights
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == states(''input_datetime.aquarium_daytime'')[0:5]}}'
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.aquarium_light
+    service: light.turn_on
+- id: '1591459965617'
+  alias: Aquarium high temperature warning
+  description: ''
+  trigger:
+  - above: 25.5
+    below: 100
+    device_id: b2d24578e3c8445ba14ddd8fe1e9c424
+    domain: sensor
+    entity_id: sensor.aquarium_temperature
+    platform: device
+    type: temperature
+  condition: []
+  action:
+  - data_template:
+      message: Temperature is currently {{ states('sensor.aquarium_temperature') }}
+        {{ state_attr('sensor.aquarium_temperature', 'unit_of_measurement') }}
+      title: The Aquarium is too hot
+    service: notify.mobile_app_pixel_4
+- id: '1591474464429'
+  alias: Aquarium low temperature warning
+  description: ''
+  trigger:
+  - below: 23
+    device_id: b2d24578e3c8445ba14ddd8fe1e9c424
+    domain: sensor
+    entity_id: sensor.aquarium_temperature
+    platform: device
+    type: temperature
+  condition: []
+  action:
+  - data_template:
+      message: Temperature is currently {{ states('sensor.aquarium_temperature') }}
+        {{ state_attr('sensor.aquarium_temperature', 'unit_of_measurement') }}
+      title: The Aquarium is too cold
     service: notify.mobile_app_pixel_4

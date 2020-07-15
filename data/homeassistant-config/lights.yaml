@@ -1,38 +1,42 @@
 ---
 
 - platform: group
-  name: "House Lights"
+  name: House Lights
   entities:
     - light.hallway
-    - light.landing
-    - light.kitchen
-    - light.living_room
-    - light.bedroom
-    - light.study
-
-- platform: group
-  name: "Downstairs Lights"
-  entities:
-    - light.hallway
-    - light.kitchen
+    - light.kitchen_deconz
     - light.utility
     - light.living_room
-
-- platform: group
-  name: "Upstairs Lights"
-  entities:
+    - light.living_room_deconz
     - light.landing
     - light.bedroom
     - light.study
 
 - platform: group
-  name: "Kitchen Lights"
+  name: Downstairs Lights
   entities:
-    - light.kitchen_conbee
+    - light.hallway
+    - light.kitchen_deconz
+    - light.utility
+    - light.living_room
+    - light.living_room_deconz
+
+- platform: group
+  name: Upstairs Lights
+  entities:
+    - light.landing
+    - light.bedroom
+    - light.study
+
+- platform: group
+  name: Kitchen Lights
+  entities:
+    - light.kitchen_deconz
     - light.utility
 
 - platform: group
-  name: "Living Room Lights"
+  name: Living Room Lights
   entities:
     - light.living_room
-    - light.living_room_conbee
+    - light.living_room_deconz
+    

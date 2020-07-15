@@ -1,8 +1,0 @@
-{
-    "domain": "Hive",
-    "name": "My Hive Home",
-    "documentation": "https://www.home-assistant.io/components/hive/",
-    "dependencies": [],
-    "codeowners": [],
-    "requirements": []
-  }

@@ -12,36 +12,6 @@ services:
             options:
                 max-size: 10m
 
-    dnsmasq:
-        container_name: dnsmasq
-        image: anzevalher/dnsmasq:2
-        restart: unless-stopped
-        cap_add:
-            - NET_ADMIN
-        command:
-            - "--keep-in-foreground"
-            - "--user=dnsmasq"
-            - "--bind-interfaces"
-            - "--no-resolv"
-            - "--log-facility=-"
-            - "--no-hosts"
-            - "--server=172.20.0.2#5054"
-            - "--address=/routerpie.home/192.168.11.1"
-            - "--address=/pie.home/192.168.11.10"
-        networks:
-            net: 
-                ipv4_address: 172.20.0.3
-            traefik_proxy:
-        logging:
-            options:
-                max-size: 10m
-        labels:
-            - "traefik.enable=true"
-            - "traefik.docker.network=traefik_proxy"
-            - "traefik.udp.routers.dnsmasq.entrypoints=dns"
-            - "traefik.udp.routers.dnsmasq.service=dnsmasq"
-            - "traefik.udp.services.dnsmasq.loadbalancer.server.port=53"
-
     pihole:
         container_name: pihole
         image: pihole/pihole
@@ -52,18 +22,18 @@ services:
             WEBPASSWORD: ''
             VIRTUAL_HOST: "pihole.${INTERNAL_DOMAIN}"
             ServerIP: 192.168.11.16
-            DNS1: 172.20.0.3
-            DNS2: 1.1.1.1
+            DNS1: 172.20.0.2#5054
+            DNS2: 1.0.0.1
             DNSMASQ_LISTENING: local
         volumes:
             - pihole-config:/etc/pihole
             - dnsmasq-config:/etc/dnsmasq.d
         dns:
             - 127.0.0.1
-            - 172.20.0.3
+            - 172.20.0.2
         networks:
             net: 
-               ipv4_address: 172.20.0.4
+               ipv4_address: 172.20.0.3
             lan:
             traefik_proxy:
         logging:

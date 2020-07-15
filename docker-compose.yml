@@ -8,7 +8,6 @@ services:
         command:
             - "--global.sendanonymoususage=false"
             - "--api.dashboard=true"
-            - "--entrypoints.dns.address=:53/udp"
             - "--entrypoints.web.address=:80"
             - "--entrypoints.websecure.address=:443"
             - "--entrypoints.mqtt.address=:1883"
@@ -35,7 +34,6 @@ services:
         extra_hosts: 
             - host.docker.internal:172.17.0.1
         ports:
-            - 53:53/udp
             - 80:80
             - 443:443
             - 1883:1883

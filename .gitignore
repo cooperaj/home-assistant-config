@@ -1,6 +1,8 @@
+data/deconz-config
+data/dnsmasq-config
 data/mosquitto-data
 data/nodered-data
-data/deconz-config
+data/pihole-config
 data/portainer-data
 
 # home-assistant things
@@ -17,6 +19,8 @@ __pycache__
 secrets.yaml
 known_devices.yaml
 .env
+passwd
+acme.json
 
 home-assistant.log
 html5_push_registrations.conf
@@ -25,3 +29,5 @@ core
 acme.json
 
 .vscode
+
+*-bak/
